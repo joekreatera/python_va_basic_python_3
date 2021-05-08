@@ -18,7 +18,7 @@ magic = 10 + magic_type*10
 
 cooldown_type =  int(input("0)short or 1)long?"))
 rupees =  rupees +  10 + 10*cooldown_type
-force = force +  5 + 15*cooldown_type
+force = force +  5 + 10*cooldown_type
 
 
 print(f"fz {force} mg {magic}  pr {rupees} ")
