@@ -10,7 +10,5 @@ Si la magia es mayor a 20, la vida seria de 20
 magic = int(input("dame tu magia"))
 base_life = min(max(5, magic),20)
 over_life = min(magic, 20)
-
 life =max(over_life, base_life)
-
 print(life)
