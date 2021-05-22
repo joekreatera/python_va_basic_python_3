@@ -37,19 +37,34 @@ def use_from_backpack(bp_items, bp_units):
     units = int(input(f"Usuario, cuánto vas a usar de {item}?") )
     
     if item in bp_items:
+        print("Obtenido")
         idx = bp_items.index(item)
+        units = min(bp_units[idx], units)
         bp_units[idx] = bp_units[idx] - units 
     else:
+        print(f"Sin unidaes de {item}!")
         units = 0
     return units
     
 backpack_items = []
 backpack_units = []
 
-add_to_backpack(backpack_items, backpack_units)
-add_to_backpack(backpack_items, backpack_units)
-print(backpack_items)
-print(backpack_units)
+#for i in range(0,5):
+#    print(i)
+#    add_to_backpack(backpack_items, backpack_units)
+#    print(backpack_items)
+#    print(backpack_units)
+
+do_next = True
+while do_next:
+    add_to_backpack(backpack_items, backpack_units)
+    print(backpack_items)
+    print(backpack_units)
+    r = int(input("Deseas agregar mas cosas? 0) SI 1) NO"::>))
+    
+    if(r == 1):
+        do_next = False
+
 units_to_use = use_from_backpack(backpack_items, backpack_units)
 print(backpack_items)
 print(backpack_units)
