@@ -116,6 +116,9 @@ while do_battle:
             units_to_use = 0
         else:
             enemy_life -= units_to_use/2
+    
+    
+    
     if( enemy_life <= 0):
         print("Ganaste!!!!!")
         do_battle = False
@@ -158,3 +161,12 @@ T -> Daño total de la cantidad de unidades
 M -> Daño a la mitad de la cantidad de unidades
 
 """
+
+# MISION
+#
+# Agregar vida a usuario
+# Agregar elemento al usuario
+# Agregar contraataque de enemigo eligiendo un poder entre 2 elementos 
+# Colocar una mochila para el enemigo con maximo 2 elementos y con un maximo de 30 unidades
+# Aplican las mismas tablas
+#
