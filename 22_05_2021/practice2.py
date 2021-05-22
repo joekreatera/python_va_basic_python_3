@@ -28,14 +28,29 @@ def add_to_backpack(bp_items, bp_units):
     item = input("Usuario que vas a meter en la mochila?:")
     bp_items.append(item)
     bp_units.append(0)
-    units = input(f"Cuantas unidades del item {item} vas a meter en la mochila")
+    units = int(input(f"Cuantas unidades del item {item} vas a meter en la mochila:"))
     last_value = len(bp_units)-1
     bp_units[last_value] = units
+    
+def use_from_backpack(bp_items, bp_units):
+    item = input("Usuario que vas a usar de la mochila?:")
+    units = int(input(f"Usuario, cuánto vas a usar de {item}?") )
+    
+    if item in bp_items:
+        idx = bp_items.index(item)
+        bp_units[idx] = bp_units[idx] - units 
+    else:
+        units = 0
+    return units
     
 backpack_items = []
 backpack_units = []
 
 add_to_backpack(backpack_items, backpack_units)
-
+add_to_backpack(backpack_items, backpack_units)
 print(backpack_items)
 print(backpack_units)
+units_to_use = use_from_backpack(backpack_items, backpack_units)
+print(backpack_items)
+print(backpack_units)
+print(f'Used {units_to_use}')
