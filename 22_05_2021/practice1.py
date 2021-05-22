@@ -2,8 +2,12 @@
 from math import sqrt
 
 def solve(pa=1, pb=2, pc =1):
-    x1 = -pb + sqrt( pb**2 - 4*pa*pc  )
-    x2 = -pb - sqrt( pb**2 - 4*pa*pc  )
+    disc =pb**2 - 4*pa*pc
+    
+    if( disc < 0):
+        return float('-inf'),float('inf') 
+    x1 = -pb + sqrt( disc )
+    x2 = -pb - sqrt( disc  )
     
     return x1/(2*pa) ,  x2/(2*pa)
 
@@ -23,4 +27,3 @@ print(f's: ({s1} {s2}) ')
 
 s1, s2 = solve(1,1,1)
 print(f's: ({s1} {s2}) ')
-    
