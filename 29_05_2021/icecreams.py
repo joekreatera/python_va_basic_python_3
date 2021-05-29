@@ -32,7 +32,7 @@ La salida del programa deberá indicar por cada cliente qué sucedió y al final
 cantidad de dinero [5, 70]
 """
 from random import random
-
+from time import sleep
 def getIntRandom(a,b):
     return a + int((b-a)*random())
     
@@ -109,6 +109,7 @@ class IcecreamShop():
         earnings = 0
         
         for i in range(1,clients):
+            sleep(0.1)
             c = Client()
             h = None 
             if( random() > 0.7 ):
@@ -129,6 +130,7 @@ class IcecreamShop():
             else:
                 print(f'{i}:{c} did not spend anything on icecream {h}')
         print("Day earnings: " + str(earnings) )
+        return earnings
         
 def tests():
     ice1 = Icecream()
@@ -148,9 +150,11 @@ def tests():
     
 def do_simulation():
     shop = IcecreamShop()
+    total = 0
     for i in range(0,5):
         print(f"################################## DAY {i}#################################################")
-        shop.day()
-
+        total += shop.day()
+    
+    print(f"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$  TOTAL EARNINGS (${total})   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
 
 do_simulation()
