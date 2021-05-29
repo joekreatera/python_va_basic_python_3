@@ -61,7 +61,7 @@ class Icecream:
         return self.__price
         
     def __str__(self):
-        return f'p: {self.__price} f:{self.__flavour}'
+        return f'p: {self.__price:.2f} f:{self.__flavour}'
         
 class BananaIcrecream(Icecream):
     EXTRA = 20
@@ -97,7 +97,7 @@ class Client:
     def getName(self):
         return self.__name
     def __str__(self):
-        return f'{self.__name} {self.__flavour} {self.__budget}'
+        return f'{self.__name} {self.__flavour} {self.__budget:.2f}'
         
 
 class IcecreamShop():
@@ -124,7 +124,7 @@ class IcecreamShop():
                     money_available = c.getBudget() - h.getPrice()
                     t = min(money_available, tip)
                     earnings += t
-                    print(f'{i}:{c} did spend icecream {h} with a tip of {t}')
+                    print(f'{i}:{c} did spend icecream {h} with a tip of {t:.2f}')
                 else:
                     print(f'{i}:{c} did spend icecream {h}')
             else:
@@ -155,6 +155,6 @@ def do_simulation():
         print(f"################################## DAY {i}#################################################")
         total += shop.day()
     
-    print(f"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$  TOTAL EARNINGS (${total})   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+    print(f"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$  TOTAL EARNINGS (${total:.2f})   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
 
 do_simulation()
