@@ -62,8 +62,6 @@ print(r)
 print(r.getX())
 print(r.getY())
 
-
-
 points = PointList()
 f = open('points.csv','w')
 for i in range(0,1000):
