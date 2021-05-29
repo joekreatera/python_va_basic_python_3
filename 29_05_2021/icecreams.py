@@ -31,3 +31,84 @@ La salida del programa deberá indicar por cada cliente qué sucedió y al final
 5 sabores... 10 pesos por bola -> 50
 cantidad de dinero [5, 70]
 """
+from random import random
+
+def getIntRandom(a,b):
+    return a + int((b-a)*random())
+    
+
+class Icecream:
+    CHOCOLATE = 0
+    STRAWBERRY = 1
+    LEMON = 2
+    BERRY = 3
+    VANILLA = 4
+    COMBINED = 5
+    BALL_COST = 10
+    MAX_FLAVOUR = 4.99
+    def __init__(self , balls = 1, force_flavour = -1):
+        self.__price = balls*Icecream.BALL_COST
+        
+        if( force_flavour > -1 ):
+            self.__flavour = min(Icecream.COMBINED, force_flavour)
+        else:
+            self.__flavour = getIntRandom(0,Icecream.MAX_FLAVOUR)
+
+    def getFlavour(self):
+        return self.__flavour
+    
+    def getPrice(self):
+        return self.__price
+        
+    def __str__(self):
+        return f'p: {self.__price} f:{self.__flavour}'
+        
+class BananaIcrecream(Icecream):
+    EXTRA = 20
+    def __init__(self):
+        super().__init__(3, force_flavour = Icecream.COMBINED)
+    
+    def getPrice(self):
+        return super().getPrice()+BananaIcrecream.EXTRA
+    
+    def __str__(self):
+        return f'BANANA SPLIT ICREAM  p: {self.getPrice()} f:{self.getFlavour() }'
+        
+class Client:
+    MAX_NAMES = 10
+    MAX_BUDGET = 70
+    MIN_BUDGET = 5
+    FIRST_NAME = ["Mario","Ana","Jorge","Claudia","Dany","Ari","Jose","Jesus","Eva","Adan"]
+    LAST_NAME = ["Glez","Perez","Hdez","Fdez","Mora","Ruiz","Mayo","Rojo","Flores","Rocha"]
+    def __init__(self):
+        self.__name = Client.FIRST_NAME[getIntRandom(0,Client.MAX_NAMES+0.99)] + " " + Client.LAST_NAME[getIntRandom(0,Client.MAX_NAMES+0.99)]
+        self.__budget = Client.MIN_BUDGET + random()*(Client.MAX_BUDGET-Client.MIN_BUDGET)
+        self.__flavour = getIntRandom(0,Icecream.MAX_FLAVOUR)
+        
+    def getBudget(self):
+        return self.__budget
+    def getName(self):
+        return self.__name
+    def __str__(self):
+        return f'{self.__name} {self.__flavour} {self.__budget}'
+        
+
+
+def tests():
+    ice1 = Icecream()
+    print(ice1)
+    ice2 = Icecream(balls = 2)
+    print(ice2)
+    ice3 = Icecream(balls = 2, force_flavour = Icecream.VANILLA)
+    print(ice3)
+    ice4 = Icecream(balls = 3, force_flavour = 10)
+    print(ice4)
+    bc = BananaIcrecream()
+    print(bc)
+    c = Client()
+    print(c)
+    c = Client()
+    print(c)
+    
+    
+tests()
