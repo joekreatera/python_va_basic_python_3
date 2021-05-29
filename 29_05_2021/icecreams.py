@@ -28,5 +28,6 @@ helado
 bananasplit extiende/hereda de helado
 
 La salida del programa deberá indicar por cada cliente qué sucedió y al final dar la cuenta total. 
-
+5 sabores... 10 pesos por bola -> 50
+cantidad de dinero [5, 70]
 """
