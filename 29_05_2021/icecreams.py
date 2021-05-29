@@ -55,7 +55,7 @@ class Icecream:
             self.__flavour = getIntRandom(0,Icecream.MAX_FLAVOUR)
 
     def getFlavour(self):
-        return self.__flavour
+        return [self.__flavour]
     
     def getPrice(self):
         return self.__price
@@ -68,6 +68,10 @@ class BananaIcrecream(Icecream):
     def __init__(self):
         super().__init__(3, force_flavour = Icecream.COMBINED)
     
+    
+    def getFlavour(self):
+        return [Icecream.CHOCOLATE, Icecream.STRAWBERRY, Icecream.VANILLA]
+        
     def getPrice(self):
         return super().getPrice()+BananaIcrecream.EXTRA
     
@@ -81,10 +85,13 @@ class Client:
     FIRST_NAME = ["Mario","Ana","Jorge","Claudia","Dany","Ari","Jose","Jesus","Eva","Adan"]
     LAST_NAME = ["Glez","Perez","Hdez","Fdez","Mora","Ruiz","Mayo","Rojo","Flores","Rocha"]
     def __init__(self):
-        self.__name = Client.FIRST_NAME[getIntRandom(0,Client.MAX_NAMES+0.99)] + " " + Client.LAST_NAME[getIntRandom(0,Client.MAX_NAMES+0.99)]
+        self.__name = Client.FIRST_NAME[getIntRandom(0,Client.MAX_NAMES-0.00001)] + " " + Client.LAST_NAME[getIntRandom(0,Client.MAX_NAMES-0.0001)]
         self.__budget = Client.MIN_BUDGET + random()*(Client.MAX_BUDGET-Client.MIN_BUDGET)
         self.__flavour = getIntRandom(0,Icecream.MAX_FLAVOUR)
         
+    def getFlavour(self):
+        return self.__flavour
+    
     def getBudget(self):
         return self.__budget
     def getName(self):
@@ -93,7 +100,36 @@ class Client:
         return f'{self.__name} {self.__flavour} {self.__budget}'
         
 
-
+class IcecreamShop():
+    def __init__(self):
+        pass
+    
+    def day(self):
+        clients = getIntRandom(10,30.99)
+        earnings = 0
+        
+        for i in range(1,clients):
+            c = Client()
+            h = None 
+            if( random() > 0.7 ):
+                h = BananaIcrecream()
+            else:
+                h = Icecream()
+            if c.getBudget() >= h.getPrice():
+                earnings += c.getBudget()
+                if c.getFlavour() in h.getFlavour():
+                    # tip
+                    tip = 0.05*h.getPrice() + h.getPrice()*(.05*random())
+                    money_available = c.getBudget() - h.getPrice()
+                    t = min(money_available, tip)
+                    earnings += t
+                    print(f'{i}:{c} did spend icecream {h} with a tip of {t}')
+                else:
+                    print(f'{i}:{c} did spend icecream {h}')
+            else:
+                print(f'{i}:{c} did not spend anything on icecream {h}')
+        print("Day earnings: " + str(earnings) )
+        
 def tests():
     ice1 = Icecream()
     print(ice1)
@@ -110,5 +146,11 @@ def tests():
     c = Client()
     print(c)
     
-    
-tests()
+def do_simulation():
+    shop = IcecreamShop()
+    for i in range(0,5):
+        print(f"################################## DAY {i}#################################################")
+        shop.day()
+
+
+do_simulation()
