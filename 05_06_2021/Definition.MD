@@ -12,6 +12,7 @@
  To fight, each creature has a combination of strength and magic. Elves have multiply-by-2 on magic and orcs have a multiply-by-3 on strength. These specs are determined upon creature birth (instantiation) and are random according to the following table:
 
  Orc: Strength[50-140] Magic[1-10]
+ 
  Elf: Strength[20-50] Magic[60-120]
 
  These can be modified if anything of the next events happen:
@@ -25,15 +26,23 @@
  Elf finds Amulet : magic +40
 
  There are at least 4 Weapons and 4 Amulets randomly put on the grid.
+ 
  In the fights is possible that both creatures die. The damage they receive is according to the following formula:
+ 
  DamageDoneByOrc = Strength*0.7+Magic*0.3 (considering any updates of amulets and weapons)
+ 
  DamageDoneByElfs = Strength*0.2+Magic*0.8 (considering any updates of amulets and weapons)
+ 
 
  The max life of each creature is according to:
+ 
  ORC: 1000-2500
+ 
  ELF: 1500-2000
+ 
 
  There are some special HEALERS: items that will recover 50% of life.
+ 
  The damage done by a creature to the other creature, unless they find a HEALER, will not recover.
 
  The game will end when there's no more creatures of one side.
