@@ -82,6 +82,17 @@ class World:
     
         return f'o:{orcs_str}\ne:{elves_str}\nt:{trolls_str}\ni:{items_str}'
     
+    def cleanse_list(self, from_list, original_list):
+        while len(from_list) > 0 :
+            original_list.remove(from_list[0])
+            from_list.pop(0)
+    
+    def getIsItemTaken(self,i):
+        return i.isTaken()
+    
+    def getTakenItems(self, items_list):
+        return filter( self.getIsItemTaken  , items_list)
+    
     def canTakeItem(self,creature, item):
         
         if( not item.isTaken() ):
@@ -105,6 +116,9 @@ class World:
                 self.canTakeItem(i, item)
         for i in self.elves:
             i.move(self.__width, self.__height)
+            
+        self.cleanse_list(   list(self.getTakenItems(self.items))   , self.items)
+        
         
 w = World()
 
@@ -113,4 +127,4 @@ for i in range(0,100):
     system("cls")
     w.day()
     print(w)
-    sleep(1)
+    sleep(0.5)
