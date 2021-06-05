@@ -33,7 +33,12 @@ class Creature:
     def setPx(self, p):
         self.__px = p
     def setPy(self, p):
-        self.__py = p            
+        self.__py = p   
+    def setSx(self, p):
+        self.__sx = p
+    def setSy(self, p):
+        self.__sy = p   
+                 
     def setLife(self, p):
         self.__life = p
     def setMaxLife(self, p):
