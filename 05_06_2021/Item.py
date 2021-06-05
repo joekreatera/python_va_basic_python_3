@@ -6,15 +6,17 @@ class Item:
         return self.__px
     def getPy(self):
         return self.__py
+    def __str__(self):
+        return f'{self.getPx()}{self.getPy()}{type(self)}'
         
 class Weapon(Item):
     def __init__(self, px, py):
-        super()__init__(px,py)
+        super().__init__(px,py)
     
 class Amulet(Item):
     def __init__(self, px, py):
-        super()__init__(px,py)
+        super().__init__(px,py)
 
 class Healer(Item):
     def __init__(self, px, py):
-        super()__init__(px,py)
+        super().__init__(px,py)

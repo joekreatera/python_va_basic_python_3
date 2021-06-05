@@ -10,8 +10,8 @@ class Troll(Creature):
     MIN_LIFE = 999999
     MAX_LIFE = 999999
     
-    def __init__(self,px, py, max_speed = 0):
-        super().__init__(px,py,max_speed)
+    def __init__(self,px, py):
+        super().__init__(px,py,0)
         self.setStrength(randint(Troll.MIN_STRENGTH, Troll.MAX_STRENGTH))
         self.setMagic(randint(Troll.MIN_MAGIC, Troll.MAX_MAGIC))
         self.setMaxLife(randint(Troll.MIN_LIFE, Troll.MAX_LIFE))
