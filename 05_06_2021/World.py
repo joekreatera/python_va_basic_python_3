@@ -6,6 +6,7 @@ from Item import Weapon, Healer, Amulet
 from random import randint as getRandomBetween
 from time import sleep
 from os import system
+from math import sqrt
 # system("cls") windows
 # system('clear') mac
 class World:
@@ -80,8 +81,29 @@ class World:
             trolls_str += '\t' + str(i) + '\n'
     
         return f'o:{orcs_str}\ne:{elves_str}\nt:{trolls_str}\ni:{items_str}'
+    
+    def canTakeItem(self,creature, item):
+        
+        if( not item.isTaken() ):
+            dx = creature.getPx() - item.getPx()
+            dy = creature.getPy() - item.getPy()
+            distance = sqrt(dx**2 + dy**2)
+            
+            if distance < 5:
+                item.take()
+                if item is Weapon:
+                    pass
+                if item is Amulet:
+                    pass
+                if item is Healer:
+                    creature.heal()
+    
     def day(self):
-        for i in self.orcs:
+        for i in self.orcs: # 5
+            i.move(self.__width, self.__height)
+            for item in self.items: # 5
+                self.canTakeItem(i, item)
+        for i in self.elves:
             i.move(self.__width, self.__height)
         
 w = World()
