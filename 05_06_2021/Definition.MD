@@ -1,15 +1,15 @@
 # BattleForMiddleEarth
  battle for middle earth with orcs and elves
 
- Battle for middle earth: In this program, Orcs and Elfs will have to fight. Orcs and Elfs are CREATURES of the Middle Earth, and they should be modeled as such. Trolls are around and can EAT any CREATURE in Middle Earth.
+ Battle for middle earth: In this program, Orcs and Elves will have to fight. Orcs and Elves are CREATURES of the Middle Earth, and they should be modeled as such. Trolls are around and can EAT any CREATURE in Middle Earth.
 
- Orcs and Elfs start around a 100x100 unit grid (logically) in which they can  get together and start walking as a horde.  Two Creatures cannot be occupying the same place at the same time, so, when moving, be careful that the position the creature is heading to, does not have another creature already.
+ Orcs and Elves start around a 100x100 unit grid (logically) in which they can  get together and start walking as a horde.  Two Creatures cannot be occupying the same place at the same time, so, when moving, be careful that the position the creature is heading to, does not have another creature already.
 
- To determine if orcs or elfs can make a horde, the distance between them must be 5. Once they are a horde, advancing is slower (average of all speeds) and the future position must be in function of the centroid (avergage of their X's and Y's separately).  
+ To determine if orcs or Elves can make a horde, the distance between them must be 5. Once they are a horde, advancing is slower (average of all speeds) and the future position must be in function of the centroid (average of their X's and Y's separately).  
 
  If an Orc and an Elf meet in Middle Earth, they will start a fight. If two hordes meet each other, one orc will stand against one elf. If there are more creatures on one side, one of the guys on the other side will die. If the struggle is 3 against 1, the 1 will die. Any other case is left to interpretation by developer.
 
- To fight, each creature has a combination of strength and magic. Elfs have multiply-by-2 on magic and orcs have a multiply-by-3 on strength. These specs are determined upon creature birth (instantiation) and are random according to the following table:
+ To fight, each creature has a combination of strength and magic. Elves have multiply-by-2 on magic and orcs have a multiply-by-3 on strength. These specs are determined upon creature birth (instantiation) and are random according to the following table:
 
  Orc: Strength[50-140] Magic[1-10]
  Elf: Strength[20-50] Magic[60-120]
