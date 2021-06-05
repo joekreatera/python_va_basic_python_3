@@ -10,6 +10,8 @@ class Creature:
         self.__magic = 0
         self.__life = 0
         self.__max_life = 0
+        self.__strength_percentage = 0
+        self.__magic_percentage = 0
         self.changeDirection(max_speed)
     def move(self):
         self.setPx(self.getPx() + self.getSx())
@@ -47,6 +49,25 @@ class Creature:
         self.__strength = p
     def setMagic(self, p):
         self.__magic = p
+    
+    def getStrengthPercentage(self):
+        return self.__strength_percentage
+    
+    def getMagicPercentage(self):
+        return self.__magic_percentage
+
+    def setStrengthPercentage(self, p):
+        self.__strength_percentage = p
+    def setMagicPercentage(self, p):
+        self.__magic_percentage = p
+    
+    
+    def getHitForce(self):
+        return self.getStrengthPercentage()*self.getStrength()+ self.getMagicPercentage()*self.getMagic()
+    def receiveHit(self,hit):
+        life = life - max(life, hit)
+    def heal(self):
+        life = int(0.5*self.getMaxLife())
     
     def bounce(self, doVertical = False):
         if ( doVertical ):
