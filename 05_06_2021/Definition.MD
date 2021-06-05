@@ -15,10 +15,14 @@
  Elf: Strength[20-50] Magic[60-120]
 
  These can be modified if anything of the next events happen:
+ 
  Orc finds Weapon : strength +30
- Orc fins Amulet: destroys Amulet
+ 
+ Orc finds Amulet: destroys Amulet
+ 
  Elf finds Weapon: strength + 10
- Elf find Amulet : magic +40
+ 
+ Elf finds Amulet : magic +40
 
  There are at least 4 Weapons and 4 Amulets randomly put on the grid.
  In the fights is possible that both creatures die. The damage they receive is according to the following formula:
