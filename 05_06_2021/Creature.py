@@ -12,7 +12,8 @@ class Creature:
         self.__max_life = 0
         self.changeDirection(max_speed)
     def move(self):
-        pass
+        self.setPx(self.getPx() + self.getSx())
+        self.setPy(self.getPy() + self.getSy())
     def getPx(self):
         return self.__px
     def getPy(self):
@@ -29,6 +30,21 @@ class Creature:
         return self.__strength
     def getMagic(self):
         return self.__magic
+    
+    def setPx(self, p):
+        self.__px = p
+    def setPy(self, p):
+        self.__py = p
+            
+    def setLife(self, p):
+        self.__life = p
+    def setMaxLife(self, p):
+        self.__max_life = p
+    def setStrength(self, p):
+        self.__strength = p
+    def setMagic(self, p):
+        self.__magic = p
+    
     def bounce(self, doVertical = False):
         if ( doVertical ):
             self.__sy *= -1
