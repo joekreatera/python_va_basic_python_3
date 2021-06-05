@@ -82,12 +82,12 @@ class World:
         return f'o:{orcs_str}\ne:{elves_str}\nt:{trolls_str}\ni:{items_str}'
     def day(self):
         for i in self.orcs:
-            i.move()
+            i.move(self.__width, self.__height)
         
 w = World()
 
             
-for i in range(0,5):
+for i in range(0,100):
     system("cls")
     w.day()
     print(w)
