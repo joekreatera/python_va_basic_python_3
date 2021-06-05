@@ -17,7 +17,9 @@ class Troll(Creature):
         self.setMaxLife(randint(Troll.MIN_LIFE, Troll.MAX_LIFE))
         self.setLife(self.getMaxLife())
         self.setSx(0)
-        self.setSy(0)        
+        self.setSy(0)    
+        self.setStrengthPercentage(1)
+        self.setMagicPercentage(0)   
 if __name__ == "__main__":
     e = Troll(20,20,10)
     print(e)

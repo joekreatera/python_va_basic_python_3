@@ -16,6 +16,8 @@ class Elf(Creature):
         self.setMagic(randint(Elf.MIN_MAGIC, Elf.MAX_MAGIC))
         self.setMaxLife(randint(Elf.MIN_LIFE, Elf.MAX_LIFE))
         self.setLife(self.getMaxLife())
+        self.setStrengthPercentage(0.2)
+        self.setMagicPercentage(0.8)
         
 if __name__ == "__main__":
     e = Elf(20,20,10)

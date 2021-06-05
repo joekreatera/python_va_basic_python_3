@@ -16,7 +16,8 @@ class Orc(Creature):
         self.setMagic(randint(Orc.MIN_MAGIC, Orc.MAX_MAGIC))
         self.setMaxLife(randint(Orc.MIN_LIFE, Orc.MAX_LIFE))
         self.setLife(self.getMaxLife())
-        
+        self.setStrengthPercentage(0.7)
+        self.setMagicPercentage(0.3)
 if __name__ == "__main__":
     o = Orc(20,20,10)
     print(o)
@@ -24,4 +25,5 @@ if __name__ == "__main__":
     print(o)
     o.move()
     print(o)
+    
     
