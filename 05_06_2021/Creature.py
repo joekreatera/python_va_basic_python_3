@@ -29,6 +29,11 @@ class Creature:
         return self.__strength
     def getMagic(self):
         return self.__magic
+    def bounce(self, doVertical = False):
+        if ( doVertical ):
+            self.__sy *= -1
+        else:
+            self.__sx *= -1
     def changeDirection(self, max_speed):
         max_speed = max(max_speed, Creature.MIN_SPEED)
         random_speed = int(random()*(max_speed-Creature.MIN_SPEED) + Creature.MIN_SPEED)
@@ -36,8 +41,12 @@ class Creature:
         self.__sx = int(  random_speed*cos(random_angle)  )
         self.__sy =int(  random_speed*sin(random_angle)  )
     def __str__(self):
-        return f'{self.getPx()} {self.getPy()} {self.getSx()} {self.getSy()} \
-        {self.getStrength()} {self.getMagic()} {self.getLife()} {self.getMaxLife()}'
+        return f'x:{self.getPx()} y:{self.getPy()} sx:{self.getSx()} sy:{self.getSy()} \
+        st:{self.getStrength()} mg:{self.getMagic()} l:{self.getLife()} ml:{self.getMaxLife()}'
 if __name__ == "__main__":
-    c = Creature(10,10,10)
+    c = Creature(10,10,1)
+    print(c)
+    c.bounce()
+    print(c)
+    c.bounce(doVertical = True)
     print(c)
