@@ -7,7 +7,7 @@ class Item:
     def getPy(self):
         return self.__py
     def __str__(self):
-        return f'{self.getPx()}{self.getPy()}{type(self)}'
+        return f'x:{self.getPx()},y:{self.getPy()}{type(self)}'
         
 class Weapon(Item):
     def __init__(self, px, py):

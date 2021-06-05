@@ -4,7 +4,10 @@ from Elf import Elf
 from Troll import Troll
 from Item import Weapon, Healer, Amulet
 from random import randint as getRandomBetween
-
+from time import sleep
+from os import system
+# system("cls") windows
+# system('clear') mac
 class World:
     
     def __init__(self):
@@ -77,9 +80,15 @@ class World:
             trolls_str += '\t' + str(i) + '\n'
     
         return f'o:{orcs_str}\ne:{elves_str}\nt:{trolls_str}\ni:{items_str}'
-    def day():
-        pass
+    def day(self):
+        for i in self.orcs:
+            i.move()
         
 w = World()
-print(w)
+
             
+for i in range(0,5):
+    system("cls")
+    w.day()
+    print(w)
+    sleep(1)
