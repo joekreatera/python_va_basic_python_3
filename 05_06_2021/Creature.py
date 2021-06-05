@@ -30,12 +30,10 @@ class Creature:
         return self.__strength
     def getMagic(self):
         return self.__magic
-    
     def setPx(self, p):
         self.__px = p
     def setPy(self, p):
-        self.__py = p
-            
+        self.__py = p            
     def setLife(self, p):
         self.__life = p
     def setMaxLife(self, p):
