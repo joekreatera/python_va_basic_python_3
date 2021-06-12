@@ -9,6 +9,7 @@ from os import system
 from math import sqrt
 from Horde import Horde
 import Constants as GB
+from helpers import near
 
 # system("cls") windows
 # system('clear') mac
@@ -108,15 +109,9 @@ class World:
     
     def getDeadCreatures(self, creatures_list):
         return filter( self.getIsICreatureDead  , creatures_list)
-        
-    def near(self, objA, objB):
-        dx = objA.getPx() - objB.getPx()
-        dy = objA.getPy() - objB.getPy()
-        distance = sqrt(dx**2 + dy**2)
-        return distance
-        
+
     def fight(self,creatureA, creatureB):
-        if self.near(creatureA, creatureB) < GB.APPROACH_DISTANCE:
+        if near(creatureA, creatureB) < GB.APPROACH_DISTANCE:
             while( creatureA.getLife() > 0 and creatureB.getLife()  > 0):
     
                 cAh = creatureA.getHitForce()
@@ -125,7 +120,7 @@ class World:
                 creatureB.receiveHit(cAh)
                 
     def doHorde(self,creatureA, creatureB , horde_list , this_day_horde_list ):
-        if self.near(creatureA, creatureB) < GB.APPROACH_DISTANCE \
+        if near(creatureA, creatureB) < GB.APPROACH_DISTANCE \
             and  \
             not creatureA in this_day_horde_list \
             and \
@@ -134,12 +129,16 @@ class World:
             horde_list.append( Horde([creatureA, creatureB]) )
             this_day_horde_list.append(creatureA)
             this_day_horde_list.append(creatureB)
-            
+    
+    def joinHorde(self, horde, creature, creatures_in_hordes ):
+        if( not creature in creatures_in_hordes ):
+            if  ( horde.joinHorde(creature) ):
+                creatures_in_hordes.append(creature)
                 
     def canTakeItem(self,creature, item):
         
         if( not item.isTaken() ):
-            distance = self.near(creature, item)
+            distance = near(creature, item)
             if distance < GB.APPROACH_DISTANCE:
                 item.take()
                 if type(item) is Weapon:
@@ -178,13 +177,18 @@ class World:
             #    self.fight(i,j)
             #for j in self.trolls:
             #    self.fight(i,j)
-     
+        
         self.cleanse_list(   list(self.getTakenItems(self.items))   , self.items)
         self.cleanse_list(   list(self.getDeadCreatures(self.orcs))   , self.orcs)
         self.cleanse_list(   elves_in_hordes   , self.elves)
         
+        elves_in_hordes = [] 
+        for horde in self.elf_hordes:
+            horde.move(self.__width, self.__height)
+            for elf in self.elves:
+                self.joinHorde(horde, elf, elves_in_hordes )
         
-        
+        self.cleanse_list(   elves_in_hordes   , self.elves)
         
 w = World()
 

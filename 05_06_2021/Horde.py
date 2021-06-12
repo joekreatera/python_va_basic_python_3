@@ -1,5 +1,5 @@
 from Orc import Orc
-
+from helpers import near
 """
 Horde class is a container for an unlimited amount of creatures.
 Horde will have the type of its very first member
@@ -45,6 +45,12 @@ class Horde:
             for c in self.__members:
                 c.move(world_width, world_height, overwrite_sx = sx, overwrite_sy = sy)
     
+    def joinHorde(self, creature, distance):
+        for c in self.__members:
+            if near(c, creature) < distance:
+                self.addMember(creature)
+                return True
+        return False
     def __str__(self):
         res = f'\t Horde q:{len(self.__members)} x:{ self.getPx() } y:{ self.getPy() }: \n'
         for c in self.__members:
