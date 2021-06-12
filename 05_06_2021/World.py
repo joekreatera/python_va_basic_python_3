@@ -132,9 +132,13 @@ class World:
     
     def joinHorde(self, horde, creature, creatures_in_hordes ):
         if( not creature in creatures_in_hordes ):
-            if  ( horde.joinHorde(creature) ):
+            if  ( horde.joinHorde(creature ,  GB.APPROACH_DISTANCE) ):
                 creatures_in_hordes.append(creature)
-                
+    
+    def mergeHordes(self, hordeA, hordeB):
+        if  near(hordeA, hordeB) < 20*GB.APPROACH_DISTANCE and not hordeA is hordeB:
+            hordeA.mergeWithHorde(hordeB)
+            
     def canTakeItem(self,creature, item):
         
         if( not item.isTaken() ):
@@ -187,7 +191,8 @@ class World:
             horde.move(self.__width, self.__height)
             for elf in self.elves:
                 self.joinHorde(horde, elf, elves_in_hordes )
-        
+            for friends in self.elf_hordes:
+                self.mergeHordes(horde, friends )
         self.cleanse_list(   elves_in_hordes   , self.elves)
         
 w = World()

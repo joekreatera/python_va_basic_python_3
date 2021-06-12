@@ -34,6 +34,20 @@ class Horde:
             self.__type = Horde.ORC_HORDE if type(creature) is Orc else Horde.ELF_HORDE
         self.__members.append(creature)
     
+    def getMembers(self):
+        return self.__members
+    
+    def cleanMembers(self):
+        self.__members.clear()
+        
+    def mergeWithHorde(self, horde):
+        other_members = horde.getMembers()
+        for m in other_members:
+            print(m)
+            self.addMember(m)
+        
+        horde.cleanMembers()
+        
     def move(self , world_width, world_height):
         if( len( self.__members) > 0):
             sx_list = [ c.getSx() for c in self.__members ]
