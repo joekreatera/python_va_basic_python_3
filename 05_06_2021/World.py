@@ -150,7 +150,7 @@ class World:
             hordeA.mergeWithHorde(hordeB)
             
     def killCreature(self, horde, creature):
-        if( horde.near(creature , GB.APPROACH_DISTANCE) ):
+        if( horde.nearHorde(creature , GB.APPROACH_DISTANCE) ):
             creature.setLife(0)        
     
     def canTakeItem(self,creature, item):
