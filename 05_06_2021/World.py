@@ -73,6 +73,7 @@ class World:
         orcs_str = "Orcs:\n"
         elves_str = "Elves:\n"
         e_horde_str = "\tElf Hordes:\n"
+        o_horde_str = "\tOrc Hordes:\n"
         items_str = "Items:\n"
         trolls_str = "Trolls:\n"
         
@@ -90,14 +91,20 @@ class World:
             
         for i in self.elf_hordes:
             e_horde_str += '\t' + str(i) + '\n'
+            
+        for i in self.orc_hordes:
+            o_horde_str += '\t' + str(i) + '\n'
     
-        return f'o:{orcs_str}\ne:{elves_str}\ne:{e_horde_str}\nt:{trolls_str}\ni:{items_str}'
+        return f'o:{orcs_str}\no:{o_horde_str}\ne:{elves_str}\ne:{e_horde_str}\nt:{trolls_str}\ni:{items_str}'
     
     def cleanse_list(self, from_list, original_list):
         while len(from_list) > 0 :
             original_list.remove(from_list[0])
             from_list.pop(0)
     
+    def getIsHordeUseless(self,i):
+        return i.allDead()
+        
     def getIsItemTaken(self,i):
         return i.isTaken()
     
@@ -109,6 +116,9 @@ class World:
     
     def getDeadCreatures(self, creatures_list):
         return filter( self.getIsICreatureDead  , creatures_list)
+    
+    def getUselessHordes(self, hordes_list):
+        return filter( self.getIsHordeUseless  , hordes_list)
 
     def fight(self,creatureA, creatureB):
         if near(creatureA, creatureB) < GB.APPROACH_DISTANCE:
@@ -136,7 +146,7 @@ class World:
                 creatures_in_hordes.append(creature)
     
     def mergeHordes(self, hordeA, hordeB):
-        if  near(hordeA, hordeB) < 20*GB.APPROACH_DISTANCE and not hordeA is hordeB:
+        if  near(hordeA, hordeB) < 2*GB.APPROACH_DISTANCE and not hordeA is hordeB:
             hordeA.mergeWithHorde(hordeB)
             
     def canTakeItem(self,creature, item):
@@ -159,17 +169,21 @@ class World:
                     creature.heal()
     
     def day(self):
-        """
+        elves_in_hordes = [] 
+        orcs_in_hordes = [] 
+        
         for i in self.orcs: # 5
             i.move(self.__width, self.__height)
             for item in self.items: # 5
                 self.canTakeItem(i, item)
-            for j in self.elves:
-                self.fight(i,j)
-            for j in self.trolls:
-                self.fight(i,j)
-        """ 
-        elves_in_hordes = [] 
+            for j in self.orcs:
+                self.doHorde(i,j, self.orc_hordes, orcs_in_hordes)
+            # for j in self.elves:
+            #    self.fight(i,j)
+            # for j in self.trolls:
+            #    self.fight(i,j)
+         
+        
         for i in self.elves:
             i.move(self.__width, self.__height)
             for item in self.items: # 5
@@ -185,15 +199,29 @@ class World:
         self.cleanse_list(   list(self.getTakenItems(self.items))   , self.items)
         self.cleanse_list(   list(self.getDeadCreatures(self.orcs))   , self.orcs)
         self.cleanse_list(   elves_in_hordes   , self.elves)
+        self.cleanse_list(   orcs_in_hordes   , self.orcs)
         
         elves_in_hordes = [] 
+        orcs_in_hordes = [] 
+                
+        for horde in self.orc_hordes:
+            horde.move(self.__width, self.__height)
+            for orc in self.orcs:
+                self.joinHorde(horde, orc, orcs_in_hordes )
+            for friends in self.orc_hordes:
+                self.mergeHordes(horde, friends )
+        
         for horde in self.elf_hordes:
             horde.move(self.__width, self.__height)
             for elf in self.elves:
                 self.joinHorde(horde, elf, elves_in_hordes )
             for friends in self.elf_hordes:
                 self.mergeHordes(horde, friends )
+                
         self.cleanse_list(   elves_in_hordes   , self.elves)
+        self.cleanse_list(   orcs_in_hordes   , self.orcs)
+        self.cleanse_list(   list(self.getUselessHordes(self.elf_hordes))   , self.elf_hordes)
+        self.cleanse_list(   list(self.getUselessHordes(self.orc_hordes))   , self.orc_hordes)
         
 w = World()
 

@@ -37,6 +37,11 @@ class Horde:
     def getMembers(self):
         return self.__members
     
+    def allDead(self):
+        for m in self.__members:
+            if m.getLife() > 0:
+                return False
+        return True    
     def cleanMembers(self):
         self.__members.clear()
         
