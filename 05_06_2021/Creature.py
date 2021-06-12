@@ -77,7 +77,7 @@ class Creature:
     def getHitForce(self):
         return self.getStrengthPercentage()*self.getStrength()+ self.getMagicPercentage()*self.getMagic()
     def receiveHit(self,hit):
-        self.setLife( self.getLife() - max( self.getLife() , hit) )
+        self.setLife( self.getLife() - min( self.getLife() , hit) )
     def heal(self):
         self.__life = int(0.5*self.getMaxLife())
     

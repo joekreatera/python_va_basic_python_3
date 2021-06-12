@@ -92,9 +92,15 @@ class World:
     def getIsItemTaken(self,i):
         return i.isTaken()
     
+    def getIsICreatureDead(self, c):
+        return c.getLife() <= 0
+    
     def getTakenItems(self, items_list):
         return filter( self.getIsItemTaken  , items_list)
     
+    def getDeadCreatures(self, creatures_list):
+        return filter( self.getIsICreatureDead  , creatures_list)
+        
     def near(self, objA, objB):
         dx = objA.getPx() - objB.getPx()
         dy = objA.getPy() - objB.getPy()
@@ -104,11 +110,12 @@ class World:
     def fight(self,creatureA, creatureB):
         if self.near(creatureA, creatureB) < GB.APPROACH_DISTANCE:
             while( creatureA.getLife() > 0 and creatureB.getLife()  > 0):
+    
                 cAh = creatureA.getHitForce()
-                cBh = creatureA.getHitForce()
+                cBh = creatureB.getHitForce()
                 creatureA.receiveHit(cBh)
                 creatureB.receiveHit(cAh)
-    
+                
     def canTakeItem(self,creature, item):
         
         if( not item.isTaken() ):
@@ -135,12 +142,21 @@ class World:
                 self.canTakeItem(i, item)
             for j in self.elves:
                 self.fight(i,j)
+            for j in self.trolls:
+                self.fight(i,j)
                 
         for i in self.elves:
             i.move(self.__width, self.__height)
             for item in self.items: # 5
                 self.canTakeItem(i, item)
+            for j in self.orcs:
+                self.fight(i,j)
+            for j in self.trolls:
+                self.fight(i,j)
+                
         self.cleanse_list(   list(self.getTakenItems(self.items))   , self.items)
+        self.cleanse_list(   list(self.getDeadCreatures(self.orcs))   , self.orcs)
+        self.cleanse_list(   list(self.getDeadCreatures(self.elves))   , self.elves)
         
         
         
@@ -152,4 +168,4 @@ for i in range(0,100):
     system("cls")
     w.day()
     print(w)
-    sleep(0.1)
+    sleep(.1)
