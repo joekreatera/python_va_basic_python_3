@@ -13,17 +13,20 @@ class Creature:
         self.__strength_percentage = 0
         self.__magic_percentage = 0
         self.changeDirection(max_speed)
-    def move(self, world_width, world_height):
-        if(self.getPx() + self.getSx() ) > world_width:
+    def move(self, world_width, world_height , overwrite_sx = 0, overwrite_sy = 0):
+        sx = self.getSx() if overwrite_sx == 0 else overwrite_sx
+        sy = self.getSy() if overwrite_sy == 0 else overwrite_sy
+        
+        if(self.getPx() + sx > world_width and self.getSx() > 0 ) :
             self.bounce()
         
-        if(self.getPx() + self.getSx() ) < 0:
+        if(self.getPx() + sx < 0 and self.getSx() < 0 ):
             self.bounce()
         
-        if(self.getPy() + self.getSy() ) > world_height:
+        if(self.getPy() + sy > world_height and self.getSy() > 0 ) :
             self.bounce(doVertical = True)
     
-        if(self.getPy() + self.getSy() ) < 0:
+        if(self.getPy() + sy < 0 and self.getSy() < 0 ):
             self.bounce(doVertical = True)
             
         self.setPx(self.getPx() + self.getSx())
