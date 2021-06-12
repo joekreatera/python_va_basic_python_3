@@ -27,7 +27,7 @@ class Horde:
         if( len(self.__members) == 0):
             return 0 
             
-        return sum([ c.getPx() for c in self.__members ])/len(self.__members)
+        return sum([ c.getPy() for c in self.__members ])/len(self.__members)
     
     def addMember(self, creature):
         if( len(self.__members) == 0 ):
@@ -46,7 +46,7 @@ class Horde:
                 c.move(world_width, world_height, overwrite_sx = sx, overwrite_sy = sy)
     
     def __str__(self):
-        res = f'\t Horde {len(self.__members)} x:{ self.getPx() } y:{ self.getPy() }:'
+        res = f'\t Horde q:{len(self.__members)} x:{ self.getPx() } y:{ self.getPy() }: \n'
         for c in self.__members:
             res += f'\t\t {c}\n'
         return res

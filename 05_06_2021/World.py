@@ -124,9 +124,17 @@ class World:
                 creatureA.receiveHit(cBh)
                 creatureB.receiveHit(cAh)
                 
-    def doHorde(self,creatureA, creatureB , horde_list):
-        if self.near(creatureA, creatureB) < GB.APPROACH_DISTANCE:
+    def doHorde(self,creatureA, creatureB , horde_list , this_day_horde_list ):
+        if self.near(creatureA, creatureB) < GB.APPROACH_DISTANCE \
+            and  \
+            not creatureA in this_day_horde_list \
+            and \
+            not creatureB in this_day_horde_list \
+            and not creatureA is creatureB :
             horde_list.append( Horde([creatureA, creatureB]) )
+            this_day_horde_list.append(creatureA)
+            this_day_horde_list.append(creatureB)
+            
                 
     def canTakeItem(self,creature, item):
         
@@ -157,21 +165,23 @@ class World:
                 self.fight(i,j)
             for j in self.trolls:
                 self.fight(i,j)
-        """        
+        """ 
+        elves_in_hordes = [] 
         for i in self.elves:
             i.move(self.__width, self.__height)
             for item in self.items: # 5
                 self.canTakeItem(i, item)
             for j in self.elves:
-                self.doHorde(i,j, self.elf_hordes)
+                self.doHorde(i,j, self.elf_hordes, elves_in_hordes)
+                
             #for j in self.orcs:
             #    self.fight(i,j)
             #for j in self.trolls:
             #    self.fight(i,j)
-                
+     
         self.cleanse_list(   list(self.getTakenItems(self.items))   , self.items)
         self.cleanse_list(   list(self.getDeadCreatures(self.orcs))   , self.orcs)
-        self.cleanse_list(   list(self.getDeadCreatures(self.elves))   , self.elves)
+        self.cleanse_list(   elves_in_hordes   , self.elves)
         
         
         
