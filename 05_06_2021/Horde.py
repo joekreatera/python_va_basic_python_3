@@ -70,6 +70,13 @@ class Horde:
                 self.addMember(creature)
                 return True
         return False
+    
+    def nearHorde(self, creature, distance):
+        for c in self.__members:
+            if near(c, creature) < distance:
+                return True
+        return False
+        
     def __str__(self):
         res = f'\t Horde q:{len(self.__members)} x:{ self.getPx() } y:{ self.getPy() }: \n'
         for c in self.__members:

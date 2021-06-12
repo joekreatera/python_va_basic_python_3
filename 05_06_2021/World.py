@@ -149,6 +149,10 @@ class World:
         if  near(hordeA, hordeB) < 2*GB.APPROACH_DISTANCE and not hordeA is hordeB:
             hordeA.mergeWithHorde(hordeB)
             
+    def killCreature(self, horde, creature):
+        if( horde.near(creature , GB.APPROACH_DISTANCE) ):
+            creature.setLife(0)        
+    
     def canTakeItem(self,creature, item):
         
         if( not item.isTaken() ):
@@ -185,6 +189,8 @@ class World:
             for j in self.trolls:
                 self.fight(i,j)
          
+        self.cleanse_list(   list(self.getDeadCreatures(self.orcs))   , self.orcs)
+        self.cleanse_list(   list(self.getDeadCreatures(self.elves))   , self.elves)
         
         for i in self.elves:
             if i in elves_in_hordes:
@@ -199,8 +205,11 @@ class World:
             for j in self.trolls:
                 self.fight(i,j)
         
-        self.cleanse_list(   list(self.getTakenItems(self.items))   , self.items)
         self.cleanse_list(   list(self.getDeadCreatures(self.orcs))   , self.orcs)
+        self.cleanse_list(   list(self.getDeadCreatures(self.elves))   , self.elves)
+        
+                
+        self.cleanse_list(   list(self.getTakenItems(self.items))   , self.items)
         self.cleanse_list(   elves_in_hordes   , self.elves)
         self.cleanse_list(   orcs_in_hordes   , self.orcs)
         
@@ -211,18 +220,27 @@ class World:
             horde.move(self.__width, self.__height)
             for orc in self.orcs:
                 self.joinHorde(horde, orc, orcs_in_hordes )
+            for elf in self.elves:
+                self.killCreature(horde, elf)
             for friends in self.orc_hordes:
                 self.mergeHordes(horde, friends )
         
+        self.cleanse_list(   orcs_in_hordes   , self.orcs)
+        self.cleanse_list(   list(self.getDeadCreatures(self.elves))   , self.elves)
+
         for horde in self.elf_hordes:
             horde.move(self.__width, self.__height)
             for elf in self.elves:
                 self.joinHorde(horde, elf, elves_in_hordes )
+            for orc in self.orcs:
+                self.killCreature(horde, orc)
             for friends in self.elf_hordes:
                 self.mergeHordes(horde, friends )
                 
         self.cleanse_list(   elves_in_hordes   , self.elves)
-        self.cleanse_list(   orcs_in_hordes   , self.orcs)
+        self.cleanse_list(   list(self.getDeadCreatures(self.orcs))   , self.orcs)
+
+
         self.cleanse_list(   list(self.getUselessHordes(self.elf_hordes))   , self.elf_hordes)
         self.cleanse_list(   list(self.getUselessHordes(self.orc_hordes))   , self.orc_hordes)
         
