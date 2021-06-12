@@ -17,10 +17,32 @@ class Horde:
         
         self.__members = creature_list
     
+    def getPx():
+        if( len(self.__members) == 0)
+            return 0 
+        
+        return sum([ c.getPx() for c in self.__members ])/len(self.__members)
+        
+    def getPy():
+        if( len(self.__members) == 0)
+            return 0 
+            
+        return sum([ c.getPx() for c in self.__members ])/len(self.__members)
+    
     def addMember(self, creature):
         if( len(self.__members) == 0 ):
             self.__type = Horde.ORC_HORDE if type(creature]) is Orc else Horde.ELF_HORDE
         self.__members.append(creature)
     
+    def move(self , world_width, world_height):
+        if( len( self.__members) > 0):
+            sx_list = [ c.getSx() for c in self.__members ]
+            sy_list = [ c.getSy() for c in self.__members ]
     
+            sx = sum(sx_list)/len(sx_list)
+            sy = sum(sy_list)/len(sy_list)
+            
+            for c in self.__members:
+                c.move(world_width, world_height, overwrite_sx = sx, overwrite_sy = sy)
+            
         
