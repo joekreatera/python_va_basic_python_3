@@ -11,19 +11,19 @@
 
  To fight, each creature has a combination of strength and magic. Elves have multiply-by-2 on magic and orcs have a multiply-by-3 on strength. These specs are determined upon creature birth (instantiation) and are random according to the following table:
 
- Orc: Strength[50-140] Magic[1-10]
+ Orc: Strength[50-140] Magic[1-10] [ready]
  
- Elf: Strength[20-50] Magic[60-120]
+ Elf: Strength[20-50] Magic[60-120] [ready]
 
  These can be modified if anything of the next events happen:
  
- Orc finds Weapon : strength +30
+ Orc finds Weapon : strength +30 [ready]
  
- Orc finds Amulet: destroys Amulet
+ Orc finds Amulet: destroys Amulet [ready]
  
- Elf finds Weapon: strength + 10
- 
- Elf finds Amulet : magic +40
+ Elf finds Weapon: strength + 10 [ready]
+  
+ Elf finds Amulet : magic +40 [ready]
 
  There are at least 4 Weapons and 4 Amulets randomly put on the grid.
  

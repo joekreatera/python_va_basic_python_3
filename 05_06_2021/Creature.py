@@ -77,9 +77,9 @@ class Creature:
     def getHitForce(self):
         return self.getStrengthPercentage()*self.getStrength()+ self.getMagicPercentage()*self.getMagic()
     def receiveHit(self,hit):
-        life = life - max(life, hit)
+        self.setLife( self.getLife() - max( self.getLife() , hit) )
     def heal(self):
-        life = int(0.5*self.getMaxLife())
+        self.__life = int(0.5*self.getMaxLife())
     
     def bounce(self, doVertical = False):
         if ( doVertical ):

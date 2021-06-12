@@ -7,6 +7,8 @@ from random import randint as getRandomBetween
 from time import sleep
 from os import system
 from math import sqrt
+import Constants as GB
+
 # system("cls") windows
 # system('clear') mac
 class World:
@@ -93,20 +95,37 @@ class World:
     def getTakenItems(self, items_list):
         return filter( self.getIsItemTaken  , items_list)
     
+    def near(self, objA, objB):
+        dx = objA.getPx() - objB.getPx()
+        dy = objA.getPy() - objB.getPy()
+        distance = sqrt(dx**2 + dy**2)
+        return distance
+        
+    def fight(self,creatureA, creatureB):
+        if self.near(creatureA, creatureB) < GB.APPROACH_DISTANCE:
+            while( creatureA.getLife() > 0 and creatureB.getLife()  > 0):
+                cAh = creatureA.getHitForce()
+                cBh = creatureA.getHitForce()
+                creatureA.receiveHit(cBh)
+                creatureB.receiveHit(cAh)
+    
     def canTakeItem(self,creature, item):
         
         if( not item.isTaken() ):
-            dx = creature.getPx() - item.getPx()
-            dy = creature.getPy() - item.getPy()
-            distance = sqrt(dx**2 + dy**2)
-            
-            if distance < 5:
+            distance = self.near(creature, item)
+            if distance < GB.APPROACH_DISTANCE:
                 item.take()
-                if item is Weapon:
-                    pass
-                if item is Amulet:
-                    pass
-                if item is Healer:
+                if type(item) is Weapon:
+                    if type(creature) is Orc:
+                        creature.setStrength( creature.getStrength() + GB.WEAPON_EXTRA_STRENGTH_ORCS ) 
+                    if type(creature) is Elf:
+                        creature.setStrength( creature.getStrength() + GB.WEAPON_EXTRA_STRENGTH_ELVES  )
+                if type(item) is Amulet:
+                    if type(creature) is Elf:
+                        creature.setMagic( creature.getMagic() + GB.AMULET_EXTRA_MAGIC_ELVES  )
+                    if type(creature) is Orc:
+                        creature.setMagic( creature.getMagic() + GB.AMULET_EXTRA_MAGIC_ORCS  )
+                if type(item) is Healer:
                     creature.heal()
     
     def day(self):
@@ -114,10 +133,16 @@ class World:
             i.move(self.__width, self.__height)
             for item in self.items: # 5
                 self.canTakeItem(i, item)
+            for j in self.elves:
+                self.fight(i,j)
+                
         for i in self.elves:
             i.move(self.__width, self.__height)
-            
+            for item in self.items: # 5
+                self.canTakeItem(i, item)
         self.cleanse_list(   list(self.getTakenItems(self.items))   , self.items)
+        
+        
         
         
 w = World()
@@ -127,4 +152,4 @@ for i in range(0,100):
     system("cls")
     w.day()
     print(w)
-    sleep(0.5)
+    sleep(0.1)
