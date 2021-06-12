@@ -71,8 +71,10 @@ class World:
     def __str__(self):
         orcs_str = "Orcs:\n"
         elves_str = "Elves:\n"
+        e_horde_str = "\tElf Hordes:\n"
         items_str = "Items:\n"
         trolls_str = "Trolls:\n"
+        
         for i in self.orcs:
             orcs_str += '\t' + str(i) + '\n'
         
@@ -84,8 +86,11 @@ class World:
             
         for i in self.trolls:
             trolls_str += '\t' + str(i) + '\n'
+            
+        for i in self.elf_hordes:
+            e_horde_str += '\t' + str(i) + '\n'
     
-        return f'o:{orcs_str}\ne:{elves_str}\nt:{trolls_str}\ni:{items_str}'
+        return f'o:{orcs_str}\ne:{elves_str}\ne:{e_horde_str}\nt:{trolls_str}\ni:{items_str}'
     
     def cleanse_list(self, from_list, original_list):
         while len(from_list) > 0 :

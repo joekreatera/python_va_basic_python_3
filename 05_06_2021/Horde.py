@@ -17,13 +17,13 @@ class Horde:
         
         self.__members = creature_list
     
-    def getPx():
+    def getPx(self):
         if( len(self.__members) == 0):
             return 0 
         
         return sum([ c.getPx() for c in self.__members ])/len(self.__members)
         
-    def getPy():
+    def getPy(self):
         if( len(self.__members) == 0):
             return 0 
             
