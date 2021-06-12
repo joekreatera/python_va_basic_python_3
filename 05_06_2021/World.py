@@ -7,6 +7,7 @@ from random import randint as getRandomBetween
 from time import sleep
 from os import system
 from math import sqrt
+from Horde import Horde
 import Constants as GB
 
 # system("cls") windows
@@ -21,6 +22,8 @@ class World:
         self.elves = []
         self.items = []
         self.trolls = []
+        self.elf_hordes  = []
+        self.orc_hordes = []
         
         for i in range(0,5):
             self.orcs.append(
@@ -116,6 +119,10 @@ class World:
                 creatureA.receiveHit(cBh)
                 creatureB.receiveHit(cAh)
                 
+    def doHorde(self,creatureA, creatureB , horde_list):
+        if self.near(creatureA, creatureB) < GB.APPROACH_DISTANCE:
+            horde_list.append( Horde([creatureA, creatureB]) )
+                
     def canTakeItem(self,creature, item):
         
         if( not item.isTaken() ):
@@ -136,6 +143,7 @@ class World:
                     creature.heal()
     
     def day(self):
+        """
         for i in self.orcs: # 5
             i.move(self.__width, self.__height)
             for item in self.items: # 5
@@ -144,15 +152,17 @@ class World:
                 self.fight(i,j)
             for j in self.trolls:
                 self.fight(i,j)
-                
+        """        
         for i in self.elves:
             i.move(self.__width, self.__height)
             for item in self.items: # 5
                 self.canTakeItem(i, item)
-            for j in self.orcs:
-                self.fight(i,j)
-            for j in self.trolls:
-                self.fight(i,j)
+            for j in self.elves:
+                self.doHorde(i,j, self.elf_hordes)
+            #for j in self.orcs:
+            #    self.fight(i,j)
+            #for j in self.trolls:
+            #    self.fight(i,j)
                 
         self.cleanse_list(   list(self.getTakenItems(self.items))   , self.items)
         self.cleanse_list(   list(self.getDeadCreatures(self.orcs))   , self.orcs)
