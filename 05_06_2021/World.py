@@ -173,28 +173,31 @@ class World:
         orcs_in_hordes = [] 
         
         for i in self.orcs: # 5
+            if i in orcs_in_hordes:
+                continue
             i.move(self.__width, self.__height)
             for item in self.items: # 5
                 self.canTakeItem(i, item)
             for j in self.orcs:
                 self.doHorde(i,j, self.orc_hordes, orcs_in_hordes)
-            # for j in self.elves:
-            #    self.fight(i,j)
-            # for j in self.trolls:
-            #    self.fight(i,j)
+            for j in self.elves:
+                self.fight(i,j)
+            for j in self.trolls:
+                self.fight(i,j)
          
         
         for i in self.elves:
+            if i in elves_in_hordes:
+                continue
             i.move(self.__width, self.__height)
             for item in self.items: # 5
                 self.canTakeItem(i, item)
             for j in self.elves:
                 self.doHorde(i,j, self.elf_hordes, elves_in_hordes)
-                
-            #for j in self.orcs:
-            #    self.fight(i,j)
-            #for j in self.trolls:
-            #    self.fight(i,j)
+            for j in self.orcs:
+                self.fight(i,j)
+            for j in self.trolls:
+                self.fight(i,j)
         
         self.cleanse_list(   list(self.getTakenItems(self.items))   , self.items)
         self.cleanse_list(   list(self.getDeadCreatures(self.orcs))   , self.orcs)
