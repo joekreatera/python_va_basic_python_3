@@ -149,6 +149,12 @@ class World:
         if  near(hordeA, hordeB) < 2*GB.APPROACH_DISTANCE and not hordeA is hordeB:
             hordeA.mergeWithHorde(hordeB)
     
+    def fightTroll(self, horde, troll):
+        if  near(horde, troll) < 2*GB.APPROACH_DISTANCE:
+            horde.setAllDead()
+    
+        
+    
     def fightHordes(self, hordeA, hordeB):
         if  near(hordeA, hordeB) < 2*GB.APPROACH_DISTANCE and not hordeA is hordeB:
             print(hordeA)
@@ -257,7 +263,7 @@ class World:
                 for item in self.items:
                     self.canTakeItem(orc, item)
             for j in self.trolls:
-                horde.setAllDead()
+                self.fightTroll(horde, j)
         
         self.cleanse_list(   orcs_in_hordes   , self.orcs)
         self.cleanse_list(   list(self.getDeadCreatures(self.elves))   , self.elves)
@@ -275,7 +281,7 @@ class World:
                 for item in self.items:
                     self.canTakeItem(elf, item)
             for j in self.trolls:
-                horde.setAllDead()
+                self.fightTroll(horde, j)
     
         self.cleanse_list(   elves_in_hordes   , self.elves)
         self.cleanse_list(   list(self.getDeadCreatures(self.orcs))   , self.orcs)
