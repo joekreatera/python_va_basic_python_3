@@ -153,35 +153,30 @@ class World:
         if  near(hordeA, hordeB) < 2*GB.APPROACH_DISTANCE and not hordeA is hordeB:
             print(hordeA)
             print(hordeB)
-            hA_members = hordeA.getMembers()
-            hB_members = hordeB.getMembers()
-            fights_list = []
-            longer = hA_members if len(hB_members) < len(hA_members) else hB_members
-            smaller = hB_members if len(hB_members) < len(hA_members) else hA_members
-            i = 0
-            for i in range(0, len(longer) ):
-                fight = [ [smaller[i%len(smaller)]] , [longer[i]] ]
-                if len(fights_list) < len(smaller):
-                    fights_list.append( fight )
-                else:
-                    fights_list[i%len(smaller)][1].append(longer[i])
-            
-            for f in fights_list:
-                oppA = f[0]
-                oppB = f[1]
-                if len(oppA) < len(oppB):
-                    print("dead one")
-                    oppA[0].receiveHit( oppA[0].getLife() )
-                else:
-                    print(f'Fighting {oppA[0]} {oppB[0]} ')
-                    self.fight(oppA[0], oppB[0], forceFight = True)
-            
-            print(fights_list)
-            print(hordeA)
-            print(hordeB)
-            print("this should fight")
-            sleep(5)
-    
+            while( not hordeA.allDead() and not hordeB.allDead() ):
+                hA_members = hordeA.getMembers()
+                hB_members = hordeB.getMembers()
+                fights_list = []
+                longer = hA_members if len(hB_members) < len(hA_members) else hB_members
+                smaller = hB_members if len(hB_members) < len(hA_members) else hA_members
+                i = 0
+                for i in range(0, len(longer) ):
+                    fight = [ [smaller[i%len(smaller)]] , [longer[i]] ]
+                    if len(fights_list) < len(smaller):
+                        fights_list.append( fight )
+                    else:
+                        fights_list[i%len(smaller)][1].append(longer[i])
+                
+                for f in fights_list:
+                    oppA = f[0]
+                    oppB = f[1]
+                    if len(oppA) < len(oppB):
+                        oppA[0].receiveHit( oppA[0].getLife() )
+                    else:
+                        self.fight(oppA[0], oppB[0], forceFight = True)
+                
+                hordeA.cleanDead()
+                hordeB.cleanDead()
     
     def killCreature(self, horde, creature):
         if( horde.nearHorde(creature , GB.APPROACH_DISTANCE) ):
@@ -276,11 +271,7 @@ class World:
     
         for elfs in self.elf_hordes:
             for orcs in self.orc_hordes:
-                # verify closeness
                 self.fightHordes(elfs, orcs)
-                # if they're near, fight
-                
-        # cleanse dead people
 
 
         self.cleanse_list(   list(self.getUselessHordes(self.elf_hordes))   , self.elf_hordes)

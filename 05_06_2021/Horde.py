@@ -42,6 +42,17 @@ class Horde:
             if m.getLife() > 0:
                 return False
         return True    
+        
+    def cleanDead(self):
+        dead_guys = []
+        for m in self.__members:
+            if m.getLife() <= 0:
+                dead_guys.append(m)
+        
+        while( len(dead_guys) > 0 ):
+            self.__members.remove(dead_guys[0])
+            dead_guys.pop(0)
+            
     def cleanMembers(self):
         self.__members.clear()
         
