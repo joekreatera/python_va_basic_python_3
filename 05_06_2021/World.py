@@ -253,9 +253,15 @@ class World:
                 self.killCreature(horde, elf)
             for friends in self.orc_hordes:
                 self.mergeHordes(horde, friends )
+            for orc in horde.getMembers():
+                for item in self.items:
+                    self.canTakeItem(orc, item)
+            for j in self.trolls:
+                horde.setAllDead()
         
         self.cleanse_list(   orcs_in_hordes   , self.orcs)
         self.cleanse_list(   list(self.getDeadCreatures(self.elves))   , self.elves)
+        self.cleanse_list(   list(self.getTakenItems(self.items))   , self.items)
 
         for horde in self.elf_hordes:
             horde.move(self.__width, self.__height)
@@ -265,9 +271,15 @@ class World:
                 self.killCreature(horde, orc)
             for friends in self.elf_hordes:
                 self.mergeHordes(horde, friends )
-                
+            for elf in horde.getMembers():
+                for item in self.items:
+                    self.canTakeItem(elf, item)
+            for j in self.trolls:
+                horde.setAllDead()
+    
         self.cleanse_list(   elves_in_hordes   , self.elves)
         self.cleanse_list(   list(self.getDeadCreatures(self.orcs))   , self.orcs)
+        self.cleanse_list(   list(self.getTakenItems(self.items))   , self.items)
     
         for elfs in self.elf_hordes:
             for orcs in self.orc_hordes:

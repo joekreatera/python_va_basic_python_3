@@ -42,7 +42,11 @@ class Horde:
             if m.getLife() > 0:
                 return False
         return True    
-        
+    
+    def setAllDead(self):
+        for m in self.__members:
+            m.receiveHit( m.getLife() )
+
     def cleanDead(self):
         dead_guys = []
         for m in self.__members:
