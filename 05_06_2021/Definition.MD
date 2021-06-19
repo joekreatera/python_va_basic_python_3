@@ -48,3 +48,15 @@
  The game will end when there's no more creatures of one side.
 
  Is important to note that when there is a horde, the move is going to be towards the nearest single enemy. When a creature is not in a horde, it moves randomly changing its direction vector each 5 days or when it has found the world's end. If there are just hordes missing, they will follow the nearest one.
+
+
+
+Project extra for Honors:
+
+- Las hordas deben perseguir otras hordas y creaturas, prefiriendo estas ultimas. 
+- El juego debe durar mientras haya vivos de los dos lados
+
+o
+
+- Hacerlo gráfico (console) utilizando *(elfos) °(orcos) %(trolls) @(items) 
+ 

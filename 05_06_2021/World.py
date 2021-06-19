@@ -130,7 +130,7 @@ class World:
                 creatureB.receiveHit(cAh)
                 
     def doHorde(self,creatureA, creatureB , horde_list , this_day_horde_list ):
-        if near(creatureA, creatureB) < 7*GB.APPROACH_DISTANCE \
+        if near(creatureA, creatureB) < 2*GB.APPROACH_DISTANCE \
             and  \
             not creatureA in this_day_horde_list \
             and \
