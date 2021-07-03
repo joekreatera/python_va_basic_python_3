@@ -1,6 +1,7 @@
 from direct.showbase.ShowBase import ShowBase
 from direct.task import Task
 from panda3d.core import OrthographicLens
+from panda3d.core import CollisionTraverser, CollisionNode, CollisionHandlerEvent, CollisionBox
 from panda3d.core import Point3
 from panda3d.core import loadPrcFileData
 from math import sin, cos
@@ -29,6 +30,8 @@ class DonkeyKong(ShowBase):
         
         self.blocksTexture = self.loader.loadTexture('models/block.png')
         self.stairsTexture = self.loader.loadTexture('models/stairs.png')
+        
+        messenger.toggleVerbose()
 
     def setup(self,task):
         lens = OrthographicLens()
@@ -39,6 +42,9 @@ class DonkeyKong(ShowBase):
         
         self.marioGfx = self.scene.find('root/mario')
         self.marioGfx.reparentTo(self.player)
+        
+        
+        # input setup 
         
         self.input = {
         'up':False,
@@ -52,18 +58,37 @@ class DonkeyKong(ShowBase):
             self.accept(f'raw-arrow_{k}' , self.buildPress(k) )
             self.accept(f'raw-arrow_{k}-up', self.buildRelease(k) )
         
+        
+        # collision set up
+        base.cTrav = CollisionTraverser()
+        self.collisionHandlerEvent = CollisionHandlerEvent()
+        self.collisionHandlerEvent.addInPattern('into-%in')
+        self.collisionHandlerEvent.addOutPattern('outof-%out')
+
+        
+        self.createInvisibleSquareCollider(0,0,8,5,"NewCollision","NewNode")
+        self.createInvisibleSquareCollider(-6,0,4,5,"NewCollisio2","NewNode2")
+        base.cTrav.showCollisions(self.render)
         return Task.done
+
+    def createInvisibleSquareCollider(self, px,pz, w, h, collisionNodeName, nodeName ):
+        obj = self.scene.attachNewNode(nodeName)
+        hitBox = CollisionBox( Point3(0,0,0), w, 5, h )
+        cNodePath = obj.attachNewNode( CollisionNode(collisionNodeName) )
+        cNodePath.node().addSolid(hitBox)
+        cNodePath.show()
+        base.cTrav.addCollider(cNodePath, self.collisionHandlerEvent)
+        obj.setPos(px,0,pz)
+        
     
     def buildPress(self,key):
         def pressKey():
             self.input[key] = True
-            print(f"press {key} {self.input}")
         return pressKey
         
     def buildRelease(self, key):
         def releaseKey():
             self.input[key] = False
-            print(f"release {key} {self.input}")
         return releaseKey
         
     def update(self, task):
