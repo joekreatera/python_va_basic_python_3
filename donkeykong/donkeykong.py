@@ -6,6 +6,7 @@ from panda3d.core import Point3, Vec3
 from panda3d.core import loadPrcFileData
 from panda3d.physics import *
 from math import sin, cos
+from random import random
 from direct.interval.IntervalGlobal import *
 
 loadPrcFileData('', 'win-size 800 600')
@@ -33,6 +34,7 @@ class DonkeyKong(ShowBase):
         self.blocksTexture = self.loader.loadTexture('models/block.png')
         self.stairsTexture = self.loader.loadTexture('models/stairs.png')
         
+        self.dkTimer = -1
         #messenger.toggleVerbose()
 
     def setup(self,task):
@@ -107,7 +109,7 @@ class DonkeyKong(ShowBase):
         self.donkeykong = self.scene.find('root/donkeykong')
         self.donkeykonghit = self.createSquareCollider(8.7,5,1,1,'donkeykong','dkhitbox', 'DK' , self.reachedDK, self.exitDK , self.arcadeTexture, 0x02)
         self.createDkSequence()
-        self.dk_sequence.loop() 
+        self.dk_sequence.start()
         
         self.floor1 = self.createSquareCollider(-1.8, -5.5 , 9.3, .5, 'floor0' , 'floor1HitBox', 'Floor1', self.enableJump, self.disableJump , self.blocksTexture, 0x1)
         self.floor2 = self.createSquareCollider(2.08, -2.5 , 8.0, .5, 'floor1' , 'floor2HitBox', 'Floor2', self.enableJump, self.disableJump , self.blocksTexture, 0x1)
@@ -151,17 +153,22 @@ class DonkeyKong(ShowBase):
     def exitDK(self, evt):
         pass
 
+    def calcNextBarrelThrow(self):
+        self.dkTimer = random()*3+3
+
     def changeDkFrame(self, dk,new_u, new_v):
+        self.dkTimer = -1
         dk.setTexOffset( TextureStage.getDefault() , new_u , new_v )
 
     def createDkSequence(self):
         f1 = Func(self.changeDkFrame, self.donkeykong , 0.1408067 - 0.0446603 , 0 )
         f2 = Func(self.changeDkFrame, self.donkeykong , 0.0431023 - 0.0446603 , 0.806672 - 0.703844 )
         f3 = Func(self.changeDkFrame, self.donkeykong , 0 , 0 )
-        
+        th = Func(self.throwBarrel)
+        reset = Func(self.calcNextBarrelThrow)
         d = Wait(0.2)
         
-        self.dk_sequence = Sequence(f1,d,f2,d,f3,d,f1)
+        self.dk_sequence = Sequence(f1,d,f2,d,f3,th,d,f1,reset)
 
 
     def barrelCrash(self, evt):
@@ -252,7 +259,7 @@ class DonkeyKong(ShowBase):
         barrelForceNode.addForce(barrelForce)
         physicalBarrel.getPhysical(0).addLinearForce(barrelForce)
         
-        barrelNode.setPos(self.scene,7 , 0 , 5.5)
+        barrelNode.setPos(self.scene,7 , 0 , 4.5)
         
     def createSquareCollider(self, px,pz, w, h, modelName, collisionNodeName, nodeName , intoFunction, outFunction, texture, mask ):
         obj = self.scene.attachNewNode(nodeName)
@@ -358,6 +365,11 @@ class DonkeyKong(ShowBase):
     def update(self, task):
         self.camera.setPos(0,35,0)
         self.camera.lookAt(self.scene)
+        
+        if( self.dkTimer > -1):
+            self.dkTimer -= globalClock.getDt()
+            if(self.dkTimer <= 0):
+                self.dk_sequence.start()
         
         self.applyMove()
             
