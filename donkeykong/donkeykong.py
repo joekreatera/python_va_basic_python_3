@@ -9,6 +9,8 @@ from math import sin, cos
 from random import random
 from direct.interval.IntervalGlobal import *
 
+from direct.gui.DirectGui import *
+
 loadPrcFileData('', 'win-size 800 600')
 # loadPrcFileData('', 'want-directtools #t')
 # loadPrcFileData('', 'want-tk #t')
@@ -35,6 +37,9 @@ class DonkeyKong(ShowBase):
         self.stairsTexture = self.loader.loadTexture('models/stairs.png')
         
         self.dkTimer = -1
+        self.lifeCounter = 3
+        self.playerLost = False
+        self.playerWon = False
         #messenger.toggleVerbose()
 
     def setup(self,task):
@@ -47,6 +52,21 @@ class DonkeyKong(ShowBase):
         self.marioGfx = self.scene.find('root/mario')
         self.marioGfx.reparentTo(self.player)
         self.marioGfx.setTwoSided(True)
+        
+        self.lifes = [
+        self.scene.attachNewNode("life1"),
+        self.scene.attachNewNode("life2"),
+        self.scene.attachNewNode("life3")
+        ]
+        self.marioGfx.instanceTo(self.lifes[0])
+        self.marioGfx.instanceTo(self.lifes[1])
+        self.marioGfx.instanceTo(self.lifes[2])
+        
+        self.lifes[0].setPos(-9,0,7.5)
+        self.lifes[1].setPos(-10,0,7.5)
+        self.lifes[2].setPos(-11,0,7.5)
+
+        
         self.hammerTime = False
         
         self.hammerDown = self.scene.find('root/hammerdowm')
@@ -103,7 +123,7 @@ class DonkeyKong(ShowBase):
         cNodePath.node().addSolid(ray)
         cNodePath.node().setIntoCollideMask(0x03)
         cNodePath.node().setFromCollideMask(0x03)
-        cNodePath.show()
+        #cNodePath.show()
         base.cTrav.addCollider(cNodePath, self.collisionHandlerEvent)
 
         self.donkeykong = self.scene.find('root/donkeykong')
@@ -140,9 +160,9 @@ class DonkeyKong(ShowBase):
         
         #self.createInvisibleSquareCollider(0,0,8,3,"NewCollision","NewNode")
         #self.createInvisibleSquareCollider(-6,0,4,5,"NewCollisio2","NewNode2")
-        base.cTrav.showCollisions(self.render)
+        #base.cTrav.showCollisions(self.render)
         
-        self.accept('raw-a', self.throwBarrel)
+        # self.accept('raw-a', self.throwBarrel)
         # self.player.setPos(3,0,-3.5)
         self.player.setPos(-8,0,-1.5)
         return Task.done
@@ -191,7 +211,15 @@ class DonkeyKong(ShowBase):
         if( other.name == 'Player' ):
             if(self.hammerTime):
                 self.scene.node().removeChild( physicalBarrel.getParent(0) )
-            
+            else:
+                self.minusLife()
+    
+    def minusLife(self):
+        self.lifes[self.lifeCounter-1].hide()
+        self.lifeCounter -= 1
+        
+        if( self.lifeCounter <= 1):
+            self.playerLost = True
 
     def hammerFrame1(self):
         self.hammerUp.show()
@@ -248,7 +276,7 @@ class DonkeyKong(ShowBase):
         cNodePath.node().addSolid(sphere)
         cNodePath.node().setIntoCollideMask(0x05)
         cNodePath.node().setFromCollideMask(0x05)
-        cNodePath.show()
+        #cNodePath.show()
         
         self.physicsCollisionPusher.addCollider(cNodePath, barrel)
         base.cTrav.addCollider(cNodePath, self.physicsCollisionPusher)
@@ -289,7 +317,7 @@ class DonkeyKong(ShowBase):
         cNodePath.node().addSolid(hitBox)
         cNodePath.node().setIntoCollideMask(mask)
         cNodePath.node().setFromCollideMask(mask)
-        cNodePath.show()
+        #cNodePath.show()
         base.cTrav.addCollider(cNodePath, self.collisionHandlerEvent)
         obj.setPos(px,0,pz)
         
@@ -311,11 +339,18 @@ class DonkeyKong(ShowBase):
         
         if( self.input["right"]):
             mv.x = -.1
-            self.marioGfx.setSx(self.player , -1)
+            self.marioGfx.setSx(self.player , -1)        
+            self.lifes[0].setSx(-1)
+            self.lifes[1].setSx(-1)
+            self.lifes[2].setSx(-1)
+                    
             
         if( self.input["left"]):
             mv.x = .1
             self.marioGfx.setSx(self.player , 1)
+            self.lifes[0].setSx(1)
+            self.lifes[1].setSx(1)
+            self.lifes[2].setSx(1)
             
         """
         if( self.input["space"]):
@@ -371,6 +406,15 @@ class DonkeyKong(ShowBase):
             if(self.dkTimer <= 0):
                 self.dk_sequence.start()
         
+        if( self.playerLost):
+            text = DirectLabel(text="Player Lost" , text_scale=(0.5,0.5) )
+            return Task.done
+            
+        if( self.playerWon):
+            text = DirectLabel(text="Player Won" , text_scale=(0.5,0.5) )
+            return Task.done
+            
+                    
         self.applyMove()
             
         return Task.cont  
