@@ -43,6 +43,7 @@ class DonkeyKong(ShowBase):
         
         self.marioGfx = self.scene.find('root/mario')
         self.marioGfx.reparentTo(self.player)
+        self.marioGfx.setTwoSided(True)
         self.hammerTime = False
         
         self.hammerDown = self.scene.find('root/hammerdowm')
@@ -207,9 +208,11 @@ class DonkeyKong(ShowBase):
         
         if( self.input["right"]):
             mv.x = -.1
+            self.marioGfx.setSx(self.player , -1)
             
         if( self.input["left"]):
             mv.x = .1
+            self.marioGfx.setSx(self.player , 1)
             
         """
         if( self.input["space"]):
