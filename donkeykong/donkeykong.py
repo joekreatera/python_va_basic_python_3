@@ -1,6 +1,6 @@
 from direct.showbase.ShowBase import ShowBase
 from direct.task import Task
-from panda3d.core import OrthographicLens
+from panda3d.core import OrthographicLens, TextureStage
 from panda3d.core import CollisionTraverser, CollisionNode, CollisionHandlerEvent, CollisionBox, CollisionSegment, CollisionSphere
 from panda3d.core import Point3, Vec3
 from panda3d.core import loadPrcFileData
@@ -104,7 +104,11 @@ class DonkeyKong(ShowBase):
         cNodePath.show()
         base.cTrav.addCollider(cNodePath, self.collisionHandlerEvent)
 
-
+        self.donkeykong = self.scene.find('root/donkeykong')
+        self.donkeykonghit = self.createSquareCollider(8.7,5,1,1,'donkeykong','dkhitbox', 'DK' , self.reachedDK, self.exitDK , self.arcadeTexture, 0x02)
+        self.createDkSequence()
+        self.dk_sequence.loop() 
+        
         self.floor1 = self.createSquareCollider(-1.8, -5.5 , 9.3, .5, 'floor0' , 'floor1HitBox', 'Floor1', self.enableJump, self.disableJump , self.blocksTexture, 0x1)
         self.floor2 = self.createSquareCollider(2.08, -2.5 , 8.0, .5, 'floor1' , 'floor2HitBox', 'Floor2', self.enableJump, self.disableJump , self.blocksTexture, 0x1)
         self.floor3_1 = self.createSquareCollider(3.6, 0.5 , 3.8, .5, 'floor2' , 'floor3_1HitBox', 'Floor3_1', self.enableJump, self.disableJump , self.blocksTexture, 0x1)
@@ -140,6 +144,24 @@ class DonkeyKong(ShowBase):
         # self.player.setPos(3,0,-3.5)
         self.player.setPos(-8,0,-1.5)
         return Task.done
+
+    def reachedDK(self, evt):
+        pass
+    
+    def exitDK(self, evt):
+        pass
+
+    def changeDkFrame(self, dk,new_u, new_v):
+        dk.setTexOffset( TextureStage.getDefault() , new_u , new_v )
+
+    def createDkSequence(self):
+        f1 = Func(self.changeDkFrame, self.donkeykong , 0.1408067 - 0.0446603 , 0 )
+        f2 = Func(self.changeDkFrame, self.donkeykong , 0.0431023 - 0.0446603 , 0.806672 - 0.703844 )
+        f3 = Func(self.changeDkFrame, self.donkeykong , 0 , 0 )
+        
+        d = Wait(0.2)
+        
+        self.dk_sequence = Sequence(f1,d,f2,d,f3,d,f1)
 
 
     def barrelCrash(self, evt):
