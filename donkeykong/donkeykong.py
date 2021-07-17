@@ -5,6 +5,7 @@ from panda3d.core import CollisionTraverser, CollisionNode, CollisionHandlerEven
 from panda3d.core import Point3, Vec3
 from panda3d.core import loadPrcFileData
 from math import sin, cos
+from direct.interval.IntervalGlobal import *
 
 loadPrcFileData('', 'win-size 800 600')
 # loadPrcFileData('', 'want-directtools #t')
@@ -42,6 +43,24 @@ class DonkeyKong(ShowBase):
         
         self.marioGfx = self.scene.find('root/mario')
         self.marioGfx.reparentTo(self.player)
+        self.hammerTime = False
+        
+        self.hammerDown = self.scene.find('root/hammerdowm')
+        self.hammerDown.reparentTo(self.marioGfx)
+        self.hammerDown.setPos(1,0,0)
+        
+        self.hammerUp = self.scene.find('root/hammerup')
+        self.hammerUp.reparentTo(self.marioGfx)
+        self.hammerUp.setPos(0,0,1)
+        
+        frame1 = Func(self.hammerFrame1)
+        frame2 = Func(self.hammerFrame2)
+        delay = Wait(0.1)
+        self.hammerSequence = Sequence(frame1, delay, frame2, delay)
+        # self.hammerSequence.loop()
+        
+        self.hammerUp.hide()
+        self.hammerDown.hide()
         
         self.jumpAvailable = False
         self.gravity = -.5
@@ -90,7 +109,7 @@ class DonkeyKong(ShowBase):
         self.floor3_2 = self.createSquareCollider(-6.3, 0.5 , 5, .5, 'pCube4' , 'floor3_2HitBox', 'Floor3_2', self.enableJump, self.disableJump , self.blocksTexture, 0x1)
         self.floor4 = self.createSquareCollider(1.8, 3.5 , 8.0, .5, 'floors' , 'floor4HitBox', 'Floor4', self.enableJump, self.disableJump , self.blocksTexture, 0x1)
         
-        
+        self.hammer = self.createSquareCollider(6,1.5,0.5,0.5,'hammer', 'hammerHitBox', 'hammer', self.enableHammer, self.disableHammer, self.arcadeTexture, 0x02) 
         self.topStair = self.createSquareCollider(-6.8, 3.5 , 0.5, 2.5, 'topstair' , 'topStairHitBox', 'TopStair', self.enableStairs, self.disableStairs , self.stairsTexture, 0x2)
         self.middleStair= self.createSquareCollider(-0.86, 0.1 , 0.5, 2.5, 'middlestair' , 'middleStairHitBox', 'MiddleStair', self.enableStairs, self.disableStairs , self.stairsTexture, 0x2)
         self.bottomStair = self.createSquareCollider(-6.8, -2.5 , 0.5, 2.5, 'bottomstair' , 'bottomStairHitBox', 'BottomStair', self.enableStairs, self.disableStairs , self.stairsTexture, 0x2)
@@ -102,6 +121,24 @@ class DonkeyKong(ShowBase):
         # self.player.setPos(3,0,-3.5)
         self.player.setPos(-8,0,-1.5)
         return Task.done
+
+    def hammerFrame1(self):
+        self.hammerUp.show()
+        self.hammerDown.hide()
+
+    
+    def hammerFrame2(self):
+        self.hammerUp.hide()
+        self.hammerDown.show()
+    
+
+    def enableHammer(self, evt):
+        self.hammerTime = True
+        self.scene.node().removeChild( evt.getIntoNodePath().node().getParent(0) )
+        self.hammerSequence.loop()
+                
+    def disableHammer(self, evt):
+        pass
 
     def enableJump(self, evt):
         print(f'IN----> {evt}')
