@@ -8,7 +8,7 @@ from panda3d.physics import *
 from math import sin, cos
 from random import random
 from direct.interval.IntervalGlobal import *
-
+from panda3d.core import DataNode
 from direct.gui.DirectGui import *
 
 loadPrcFileData('', 'win-size 800 600')
@@ -18,6 +18,14 @@ loadPrcFileData('', 'win-size 800 600')
 loadPrcFileData('', 'textures-auto-power-2 #f')
 loadPrcFileData('', 'textures-power-2 none')
 loadPrcFileData('', 'textures-square none')
+
+
+class AuxNode(DataNode):
+    def __init__(self,nodeName):
+        DataNode.__init__(self,nodeName)
+        self.frame = 0
+    def setSequence(self, data):
+        self.sequence = data
 
 class DonkeyKong(ShowBase):
     def __init__(self):
@@ -41,10 +49,16 @@ class DonkeyKong(ShowBase):
         self.playerLost = False
         self.playerWon = False
         #messenger.toggleVerbose()
-
+        
+        self.barrels_frames = []
+        self.barrels_frames.append(0)
+        self.barrels_frames.append( 0.410573 - 0.375774)
+        self.barrels_frames.append( 0.444913 - 0.375774)
+        self.barrels_frames.append( 0.479941 - 0.375774)
+        
     def setup(self,task):
         lens = OrthographicLens()
-        lens.setFilmSize(25,20)
+        lens.setFilmSize(23,19)
         base.camNode.setLens(lens)
         
         self.player = self.scene.attachNewNode("Player")
@@ -85,6 +99,10 @@ class DonkeyKong(ShowBase):
         
         self.hammerUp.hide()
         self.hammerDown.hide()
+        
+        self.scene.find('root/walls').hide()
+        self.scene.find('root/rightWall').hide()
+        self.scene.find('root/barrel').setPos(0,100,0)
         
         self.jumpAvailable = False
         self.gravity = -.5
@@ -168,6 +186,10 @@ class DonkeyKong(ShowBase):
         return Task.done
 
     def reachedDK(self, evt):
+        if self.hammerTime:
+            self.playerWon = True
+        else:
+            self.playerLost = True
         pass
     
     def exitDK(self, evt):
@@ -195,8 +217,7 @@ class DonkeyKong(ShowBase):
         physicalBarrel = evt.getIntoNodePath().node().getParent(0).getParent(0)
         other = evt.getFromNodePath().node().getParent(0)
         
-        print(f'{physicalBarrel.name} {other.name} ')
-        
+    
         if( other.name == 'leftWall' or other.name == 'rightWall'):
             forceNode = physicalBarrel.getChildren()[1]
             force = forceNode.getForce(0)
@@ -218,7 +239,7 @@ class DonkeyKong(ShowBase):
         self.lifes[self.lifeCounter-1].hide()
         self.lifeCounter -= 1
         
-        if( self.lifeCounter <= 1):
+        if( self.lifeCounter <= 0):
             self.playerLost = True
 
     def hammerFrame1(self):
@@ -288,6 +309,33 @@ class DonkeyKong(ShowBase):
         physicalBarrel.getPhysical(0).addLinearForce(barrelForce)
         
         barrelNode.setPos(self.scene,7 , 0 , 4.5)
+        
+        dataNode = AuxNode("sequenceData")
+        seq = self.createBarrelSequence(visualBarrel , physicalBarrel, dataNode )
+        dataNode.setSequence(seq)
+        barrelNode.attachNewNode(dataNode)
+    
+    def createBarrelSequence(self, vBarrel, pBarrel, dNode ):
+        
+        def updateBarrel():
+            vel = pBarrel.getPhysicsObject().getVelocity()
+            
+            frame = dNode.frame
+            
+            if( vel.x > 0 ):
+                frame = (frame+1)%4
+            if( vel.x < 0):
+                frame = (frame-1)%4
+                
+            dNode.frame = frame
+            vBarrel.setTexOffset( TextureStage.getDefault() , self.barrels_frames[frame] , 0 )
+            
+        f1 = Func(updateBarrel)
+        d = Wait(0.1)
+        
+        seq = Sequence(f1,d)
+        seq.loop()
+        return seq
         
     def createSquareCollider(self, px,pz, w, h, modelName, collisionNodeName, nodeName , intoFunction, outFunction, texture, mask ):
         obj = self.scene.attachNewNode(nodeName)
