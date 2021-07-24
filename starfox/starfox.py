@@ -9,6 +9,7 @@ from direct.gui.DirectGui import *
 from InputManager import *
 from Path import *
 from Player import *
+from DynamicEnemy import *
 # loadPrcFileData('', 'win-size 800 600')
 #loadPrcFileData('', 'want-directtools #t')
 #loadPrcFileData('', 'want-tk #t')
@@ -65,13 +66,26 @@ class Starfox(ShowBase):
         base.cTrav.showCollisions(self.render)
         
         self.rails = self.scene.attachNewNode("rails")
-        self.scene.find("basePlane").setPos(self.scene,0,0,-10)
+        #self.scene.find("basePlane").setPos(self.scene,0,0,-10)
         self.scene.find("basePlane").setHpr(70,0,0)
         self.scene.setPos(self.scene,0,0,0)
         self.player.reparentTo(self.rails)
         self.player.setPos(self.rails, 0,0,0)
         
+        self.createStaticEnemy(self.building_enemy,0,50,0)
+        self.createStaticEnemy(self.building_enemy,-50,40,0)
+        self.createStaticEnemy(self.building_enemy,-100,50,0)
+        self.createStaticEnemy(self.building_enemy,-70,130,0)
+        self.createStaticEnemy(self.building_enemy,-120,80,0)
+        self.createStaticEnemy(self.building_enemy,-220,130,0)
         
+        DynamicEnemy( self.scene, self.dynamic_enemy , Vec3(-230,140,10), base.cTrav , self.CollisionHandlerEvent);
+
+    def createStaticEnemy(self , original, px, py, pz):
+        be = original.copyTo(self.scene)
+        be.setPos(px,py,pz)
+        base.cTrav.addCollider( be.find("**collision**") , self.CollisionHandlerEvent )
+
     def crash(self, evt):
         print(evt)
         
@@ -79,7 +93,7 @@ class Starfox(ShowBase):
         
         rails_pos = self.rails.getPos(self.scene)
         new_y = rails_pos.y + globalClock.getDt()*10
-        self.rails.setPos( Path.getXOfY(new_y) , new_y, 1 )
+        self.rails.setPos( Path.getXOfY(new_y) , new_y, 12 )
         self.rails.setHpr( Path.getHeading(new_y) ,0 ,0 )
         
         #self.camera.lookAt(self.player)
@@ -88,6 +102,9 @@ class Starfox(ShowBase):
         relX, relZ = self.player.getPythonTag("ObjectController").update(self.rails, globalClock.getDt() )
         self.camera.setPos(self.rails, relX,-30,relZ)
         
+        enemies = self.scene.findAllMatches(DynamicEnemy.dynamic_enemy_name)
+        for e in enemies:
+            e.getPythonTag("ObjectController").update(self.scene, globalClock.getDt() , self.player)
         return Task.cont
         
 
