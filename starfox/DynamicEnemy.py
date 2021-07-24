@@ -18,12 +18,23 @@ class DynamicEnemy:
         self.gameObject.setName(DynamicEnemy.dynamic_enemy_name)
         
         self.type = type
-        self.state = ENEMY_TYPE.IDLE
+        self.state = ENEMY_STATE.IDLE
         
     def updateKamikaze(self, world, dt , player):
-        pass
+        diff = player.getPos(world) - self.gameObject.getPos(world)
+        distance = diff.length()
+        print(distance)
+        
+        if(self.state == ENEMY_STATE.IDLE and distance <= 80 ):
+            self.state = ENEMY_STATE.ATTACK
+            self.vel = player.getPos(world) - self.gameObject.getPos(world) 
+            self.vel.normalize()
+            
+        if(self.state == ENEMY_STATE.ATTACK ):
+            self.gameObject.setPos( world, self.gameObject.getPos(world) + self.vel*dt*60 )
     
     def update(self, world, dt , player):
         self.gameObject.lookAt(player)
-        if( type == ENEMY_TYPE.KAMIKAZE):
-            updateKamikaze(world,dt,player)
+        
+        if( self.type == ENEMY_TYPE.KAMIKAZE):
+            self.updateKamikaze(world,dt,player)
