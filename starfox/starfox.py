@@ -84,9 +84,10 @@ class Starfox(ShowBase):
         
         #self.camera.lookAt(self.player)
         self.camera.setHpr( Path.getHeading(new_y) ,0 ,0 )
-        self.camera.setPos(self.rails, 0,-30,0)
         
-        self.player.getPythonTag("ObjectController").update(self.scene, globalClock.getDt() )
+        relX, relZ = self.player.getPythonTag("ObjectController").update(self.rails, globalClock.getDt() )
+        self.camera.setPos(self.rails, relX,-30,relZ)
+        
         return Task.cont
         
 
