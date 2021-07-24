@@ -6,7 +6,7 @@ from panda3d.core import loadPrcFileData
 from random import random
 from direct.interval.IntervalGlobal import *
 from direct.gui.DirectGui import *
-import InputManager
+from InputManager import *
 
 # loadPrcFileData('', 'win-size 800 600')
 # loadPrcFileData('', 'want-directtools #t')
@@ -16,21 +16,36 @@ class Starfox(ShowBase):
     def __init__(self):
         super().__init__(self)
         
+        self.scene = self.loader.loadModel("models/world.egg")
+        playerTexture = self.loader.loadTexture('models/starfoxShip.jpg')
+        enemyTexture = self.loader.loadTexture('models/enemyShip.jpg')
+        bulletTexture = loader.loadTexture('models/shot.png')
+        
+        self.scene.reparentTo(self.render)
+        
+        self.player = self.scene.find("player")
+        self.player.setTexture(playerTexture)
+        self.player.setPos(3,3,3)
+        
+        self.dynamic_enemy = self.scene.find("enemy1")
+        self.dynamic_enemy.setTexture(enemyTexture)
+        self.dynamic_enemy.setPos(6,6,6)
+        
+        
         self.taskMgr.add(self.update, "update")
         
-        keys = [
-        InputManager.arrowUp,
+        
+        InputManager.initWith(self, 
+        [InputManager.arrowUp,
         InputManager.arrowDown,
         InputManager.arrowLeft,
         InputManager.arrowRight,
         InputManager.space,
         InputManager.keyX,
         InputManager.keyV
-        ]
-        InputManager.initWith(self, keys)
+        ])
         
     def update(self, evt):
-        InputManager.debug()
         return Task.cont
         
 

@@ -20,8 +20,8 @@ class InputManager:
         
         for k in key_list:
             InputManager.instance.setInput(k, False)
-            self.accept(f'raw-{k}' , InputManager.createInputFunction(i, InputManager.instance, True)  )
-            self.accept(f'raw-{k}-up' , InputManager.createInputFunction(i, InputManager.instance, False)  )
+            app.accept(f'raw-{k}' , InputManager.createInputFunction(k, InputManager.instance, True)  )
+            app.accept(f'raw-{k}-up' , InputManager.createInputFunction(k, InputManager.instance, False)  )
             
     @staticmethod
     def createInputFunction(key, inputInstance, down):
@@ -39,12 +39,12 @@ class InputManager:
         
         
     def __init__(self):
-        self.input=[]
+        self.input= { }
     
-    def setInput(key,state):
+    def setInput(self, key , state):
         self.input[key] = state
     
-    def getInput(key):
+    def getInput(self, key):
         return self.input[key]
         
     def __str__(self):
