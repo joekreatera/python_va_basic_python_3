@@ -31,7 +31,7 @@ class InputManager:
         
     @staticmethod
     def getInput(k):
-        return InputManager.instance.getInput(k)    
+        return InputManager.instance.get_input(k)    
         
     @staticmethod
     def debug():
@@ -44,7 +44,7 @@ class InputManager:
     def setInput(self, key , state):
         self.input[key] = state
     
-    def getInput(self, key):
+    def get_input(self, key):
         return self.input[key]
         
     def __str__(self):
