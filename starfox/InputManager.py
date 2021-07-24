@@ -2,8 +2,8 @@ class InputManager:
     
     arrowUp = 'arrow_up'
     arrowDown = 'arrow_down'
-    arrowDown = 'arrow_down'
-    arrowDown = 'arrow_down'
+    arrowLeft = 'arrow_left'
+    arrowRight = 'arrow_right'
     space = 'space'
     keyA= 'a'
     keyS= 's'
@@ -33,6 +33,11 @@ class InputManager:
     def getInput(k):
         return InputManager.instance.getInput(k)    
         
+    @staticmethod
+    def debug():
+        print( InputManager.instance )
+        
+        
     def __init__(self):
         self.input=[]
     
@@ -45,5 +50,5 @@ class InputManager:
     def __str__(self):
         res = ""
         for k in self.input.items():
-            res += f'\n {k[0 } {k[1]}'
+            res += f'\n {k[0]} {k[1]}'
         return res
