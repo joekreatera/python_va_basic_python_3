@@ -131,15 +131,20 @@ class Starfox(ShowBase):
     def initUI(self):
         self.font = loader.loadFont('./fonts/Magenta.ttf')
 
-        self.life = [
+        self.lifes = [
         OnscreenImage(image='./UI/fox-icon-png-8.png' , pos=(1.10,0,0.8) , scale=0.05),
         OnscreenImage(image='./UI/fox-icon-png-8.png' , pos=(1.20,0,0.8) , scale=0.05)
         ]
-        self.life[0].setTransparency(True)
-        self.life[1].setTransparency(True)
+        self.lifes[0].setTransparency(True)
+        self.lifes[1].setTransparency(True)
         
 
         self.dialogScreen = DirectDialog(
+            frameSize = (-0.7,0.7, -0.7, 0.7),
+            relief = DGG.FLAT
+        )
+        
+        self.finishedDialogScreen = DirectDialog(
             frameSize = (-0.7,0.7, -0.7, 0.7),
             relief = DGG.FLAT
         )
@@ -155,7 +160,17 @@ class Starfox(ShowBase):
         text_font = self.font
         )
         
+        self.finishtitleUI = DirectLabel(
+        text = "Terminó la misión",
+        parent = self.finishedDialogScreen,
+        scale = 0.1,
+        pos = (0,0,.2),
+        text_font = self.font
+        )
+        
         self.btn = DirectButton(text = "Start", command = self.startGame, pos =(0,0,0), parent = self.dialogScreen, scale=0.07 )
+        
+        self.finishedDialogScreen.hide()
 
     def startGame(self):
         self.dialogScreen.hide()
@@ -176,26 +191,38 @@ class Starfox(ShowBase):
         
     def update(self, evt):
         
-        rails_pos = self.rails.getPos(self.scene)
-        new_y = rails_pos.y + globalClock.getDt()*10
-        self.rails.setPos( Path.getXOfY(new_y) , new_y, 12 )
-        self.rails.setHpr( Path.getHeading(new_y) ,0 ,0 )
-        
-        #self.camera.lookAt(self.player)
-        self.camera.setHpr( Path.getHeading(new_y) ,0 ,0 )
-        
-        relX, relZ = self.player.getPythonTag("ObjectController").update(self.rails, globalClock.getDt() , self.scene,  self.bullet )
-        self.camera.setPos(self.rails, relX,-30,relZ)
-        
-        enemies = self.scene.findAllMatches(DynamicEnemy.dynamic_enemy_name)
-        for e in enemies:
-            e.getPythonTag("ObjectController").update(self.scene, globalClock.getDt() , self.player, self.bullet)
+        if(self.onGame):
+            rails_pos = self.rails.getPos(self.scene)
+            new_y = rails_pos.y + globalClock.getDt()*10
+            self.rails.setPos( Path.getXOfY(new_y) , new_y, 12 )
+            self.rails.setHpr( Path.getHeading(new_y) ,0 ,0 )
+            
+            #self.camera.lookAt(self.player)
+            self.camera.setHpr( Path.getHeading(new_y) ,0 ,0 )
+            
+            relX, relZ = self.player.getPythonTag("ObjectController").update(self.rails, globalClock.getDt() , self.scene,  self.bullet )
+            self.camera.setPos(self.rails, relX,-30,relZ)
+            
+            enemies = self.scene.findAllMatches(DynamicEnemy.dynamic_enemy_name)
+            for e in enemies:
+                e.getPythonTag("ObjectController").update(self.scene, globalClock.getDt() , self.player, self.bullet)
+                
+                
+            bullets = self.scene.findAllMatches(Bullet.bullet_name)
+            for b in bullets:
+                b.getPythonTag("ObjectController").update(self.scene, globalClock.getDt() , self.camera )
             
             
-        bullets = self.scene.findAllMatches(Bullet.bullet_name)
-        for b in bullets:
-            b.getPythonTag("ObjectController").update(self.scene, globalClock.getDt() , self.camera )
-                    
+            for life in range(0,self.lifes) :
+                self.lifes[life].hide()
+            
+            for life in range(0,self.player.getPythonTag("ObjectController").lifes) :
+                self.lifes[life].show()
+                
+            if( self.player.getPythonTag("ObjectController").lifes < 0 ):
+                self.onGame = False
+                self.finishedDialogScreen.show()
+                        
         return Task.cont
         
 

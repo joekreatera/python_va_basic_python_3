@@ -9,6 +9,7 @@ class Player:
         self.collisionHandler = collisionHandler
         
         self.shouldShoot = True
+        self.lifes = 2
         
     def update(self, world , dt , globalWorld,  bullet):
         up = InputManager.getInput(InputManager.arrowUp)
@@ -59,4 +60,5 @@ class Player:
         return camX, camZ
         
     def crash(self,obj):
+        self.lifes -= 1
         print(obj)
