@@ -130,11 +130,22 @@ class Starfox(ShowBase):
 
     def initUI(self):
         self.font = loader.loadFont('./fonts/Magenta.ttf')
+
+        self.life = [
+        OnscreenImage(image='./UI/fox-icon-png-8.png' , pos=(1.10,0,0.8) , scale=0.05),
+        OnscreenImage(image='./UI/fox-icon-png-8.png' , pos=(1.20,0,0.8) , scale=0.05)
+        ]
+        self.life[0].setTransparency(True)
+        self.life[1].setTransparency(True)
         
+
         self.dialogScreen = DirectDialog(
             frameSize = (-0.7,0.7, -0.7, 0.7),
             relief = DGG.FLAT
         )
+        
+        s = OnscreenImage(image='./UI/fox-icon-png-8.png' , pos=(0,0,-0.2) , scale=0.20, parent = self.dialogScreen)
+        s.setTransparency(True)
         
         self.titleUI = DirectLabel(
         text = "Starlost Region 4",
