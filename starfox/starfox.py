@@ -27,7 +27,6 @@ class Starfox(ShowBase):
         
         self.player = self.scene.find("player")
         self.player.setTexture(playerTexture)
-        self.player.setPythonTag("ObjectController" , Player(self.player) )
         #self.player.setPos(20,20,20)
         
         self.dynamic_enemy = self.scene.find("enemy1")
@@ -39,6 +38,8 @@ class Starfox(ShowBase):
         
         self.taskMgr.add(self.update, "update")
         
+        self.bullet = self.scene.find("bullet")
+        self.bullet.setTexture(bulletTexture)
         
         InputManager.initWith(self, 
         [InputManager.arrowUp,
@@ -53,6 +54,8 @@ class Starfox(ShowBase):
         base.cTrav = CollisionTraverser()
         self.CollisionHandlerEvent = CollisionHandlerEvent()
         
+        self.player.setPythonTag("ObjectController" , Player(self.player, base.cTrav , self.CollisionHandlerEvent) )
+        
         self.CollisionHandlerEvent.addInPattern('into-%in')
         self.CollisionHandlerEvent.addInPattern('out-%in')
         
@@ -62,6 +65,11 @@ class Starfox(ShowBase):
         
         base.cTrav.addCollider( self.scene.find("player/collision**") ,self.CollisionHandlerEvent )
         base.cTrav.addCollider( self.scene.find("basePlane/collision**") ,self.CollisionHandlerEvent )
+        
+        self.player.find("**collision**").node().setFromCollideMask(0x3)
+        self.player.find("**collision**").node().setIntoCollideMask(0x3)
+        
+        
         
         base.cTrav.showCollisions(self.render)
         
@@ -79,7 +87,7 @@ class Starfox(ShowBase):
         self.createStaticEnemy(self.building_enemy,-120,80,0)
         self.createStaticEnemy(self.building_enemy,-220,130,0)
         
-        DynamicEnemy( self.scene, self.dynamic_enemy , Vec3(-230,140,10), base.cTrav , self.CollisionHandlerEvent);
+        DynamicEnemy( self.scene, self.dynamic_enemy , Vec3(-230,140,10), base.cTrav , self.CollisionHandlerEvent, colMask=0x5);
 
     def createStaticEnemy(self , original, px, py, pz):
         be = original.copyTo(self.scene)
@@ -99,12 +107,18 @@ class Starfox(ShowBase):
         #self.camera.lookAt(self.player)
         self.camera.setHpr( Path.getHeading(new_y) ,0 ,0 )
         
-        relX, relZ = self.player.getPythonTag("ObjectController").update(self.rails, globalClock.getDt() )
+        relX, relZ = self.player.getPythonTag("ObjectController").update(self.rails, globalClock.getDt() , self.scene,  self.bullet )
         self.camera.setPos(self.rails, relX,-30,relZ)
         
         enemies = self.scene.findAllMatches(DynamicEnemy.dynamic_enemy_name)
         for e in enemies:
-            e.getPythonTag("ObjectController").update(self.scene, globalClock.getDt() , self.player)
+            e.getPythonTag("ObjectController").update(self.scene, globalClock.getDt() , self.player, self.bullet)
+            
+            
+        bullets = self.scene.findAllMatches(Bullet.bullet_name)
+        for b in bullets:
+            b.getPythonTag("ObjectController").update(self.scene, globalClock.getDt() , self.camera )
+                    
         return Task.cont
         
 
