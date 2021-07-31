@@ -213,7 +213,7 @@ class Starfox(ShowBase):
                 b.getPythonTag("ObjectController").update(self.scene, globalClock.getDt() , self.camera )
             
             
-            for life in range(0,self.lifes) :
+            for life in range(0, len(self.lifes) ) :
                 self.lifes[life].hide()
             
             for life in range(0,self.player.getPythonTag("ObjectController").lifes) :
