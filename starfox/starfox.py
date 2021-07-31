@@ -88,6 +88,8 @@ class Starfox(ShowBase):
         self.createStaticEnemy(self.building_enemy,-220,130,0)
         
         DynamicEnemy( self.scene, self.dynamic_enemy , Vec3(-230,140,10), base.cTrav , self.CollisionHandlerEvent, colMask=0x5);
+        DynamicEnemy( self.scene, self.dynamic_enemy , Vec3(-240,160,10), base.cTrav , self.CollisionHandlerEvent, colMask=0x5);
+
 
     def createStaticEnemy(self , original, px, py, pz):
         be = original.copyTo(self.scene)
@@ -95,7 +97,12 @@ class Starfox(ShowBase):
         base.cTrav.addCollider( be.find("**collision**") , self.CollisionHandlerEvent )
 
     def crash(self, evt):
-        print(evt)
+        objectInto = evt.getIntoNodePath().node().getParent(0).getPythonTag("ObjectController")
+        objectFrom = evt.getFromNodePath().node().getParent(0).getPythonTag("ObjectController")
+        
+        if( objectInto is not None):
+            objectInto.crash(objectFrom)
+        
         
     def update(self, evt):
         

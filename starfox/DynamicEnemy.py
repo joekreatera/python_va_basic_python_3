@@ -1,5 +1,6 @@
 from panda3d.core import Vec3
 from Bullet import *
+from random import random
 class ENEMY_TYPE (Enum):
     KAMIKAZE = 0
     CHASER = 1
@@ -59,7 +60,7 @@ class DynamicEnemy:
                     self.vel.normalize()
                     self.activeTimer = 0
             
-        if( self.state == ENEMY_STATE.CHASE): # and distance <= 50   
+        if( self.state == ENEMY_STATE.CHASE and distance <= 50   ): # 
             self.state = ENEMY_STATE.ATTACK
                     
         if( self.state == ENEMY_STATE.ATTACK ):
@@ -67,7 +68,7 @@ class DynamicEnemy:
             self.gameObject.setPos(world, self.gameObject.getPos(world) + self.vel*dt*35)
             self.activeTimer += dt
             if(self.activeTimer >= 1):
-                    self.vel = player.getPos(world) + world.getRelativeVector(player, Vec3(0,1,0) )*60 - self.gameObject.getPos(world)
+                    self.vel = player.getPos(world) + Vec3(0,0,random()*10-5.0) + world.getRelativeVector(player, Vec3(0,1,0) )*(random()*10+60) - self.gameObject.getPos(world)
                     self.vel.normalize()
                     self.activeTimer = 0
             self.bulletTimer += dt

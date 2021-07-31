@@ -49,7 +49,7 @@ class Player:
             self.ctrav , 
             self.collisionHandler, 
             globalWorld.getRelativeVector(self.gameObject, Vec3(0,1,0) ) ,
-            50,
+            80,
             0x4
             )
         
@@ -57,3 +57,6 @@ class Player:
             self.shouldShoot = True
             
         return camX, camZ
+        
+    def crash(self,obj):
+        print(obj)
