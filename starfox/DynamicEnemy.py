@@ -64,7 +64,7 @@ class DynamicEnemy:
             self.state = ENEMY_STATE.ATTACK
                     
         if( self.state == ENEMY_STATE.ATTACK ):
-            print("Is attacking")
+            
             self.gameObject.setPos(world, self.gameObject.getPos(world) + self.vel*dt*35)
             self.activeTimer += dt
             if(self.activeTimer >= 1):
@@ -75,7 +75,7 @@ class DynamicEnemy:
             
             if(self.bulletTimer >= 1.5):
                 self.bulletTimer = 0
-                print("Shooting bullet!")
+                
                 b = Bullet(bullet, 
                 world, 
                 self.gameObject.getPos(world) , 

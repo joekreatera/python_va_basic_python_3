@@ -13,6 +13,19 @@ from DynamicEnemy import *
 # loadPrcFileData('', 'win-size 800 600')
 #loadPrcFileData('', 'want-directtools #t')
 #loadPrcFileData('', 'want-tk #t')
+from panda3d.core import DirectionalLight, AmbientLight, Fog, PointLight
+from direct.filter.CommonFilters import CommonFilters
+from panda3d.core import AntialiasAttrib
+
+from direct.gui.DirectGui import *
+from direct.gui.OnscreenText import OnscreenText
+from direct.gui.OnscreenImage import OnscreenImage
+from panda3d.core import TextNode
+
+
+loadPrcFileData("","framebuffer-multisample 1")
+loadPrcFileData("","multisamples 2")
+
 
 class Starfox(ShowBase):
     def __init__(self):
@@ -22,7 +35,7 @@ class Starfox(ShowBase):
         playerTexture = self.loader.loadTexture('models/starfoxShip.jpg')
         enemyTexture = self.loader.loadTexture('models/enemyShip.jpg')
         bulletTexture = loader.loadTexture('models/shot.png')
-        
+        base.setBackgroundColor(0.1,0.1, 0.1, 1)
         self.scene.reparentTo(self.render)
         
         self.player = self.scene.find("player")
@@ -71,7 +84,7 @@ class Starfox(ShowBase):
         
         
         
-        base.cTrav.showCollisions(self.render)
+        #base.cTrav.showCollisions(self.render)
         
         self.rails = self.scene.attachNewNode("rails")
         #self.scene.find("basePlane").setPos(self.scene,0,0,-10)
@@ -90,6 +103,33 @@ class Starfox(ShowBase):
         DynamicEnemy( self.scene, self.dynamic_enemy , Vec3(-230,140,10), base.cTrav , self.CollisionHandlerEvent, colMask=0x5);
         DynamicEnemy( self.scene, self.dynamic_enemy , Vec3(-240,160,10), base.cTrav , self.CollisionHandlerEvent, colMask=0x5);
 
+
+        self.dirLight = DirectionalLight('dir light')
+        self.dirLight.color = (0.7,0.7,1,1)
+        self.dirPath = self.render.attachNewNode(self.dirLight)
+        self.dirPath.setHpr(45,-45,0)
+        self.dirLight.setShadowCaster(True, 512,512)
+        self.render.setLight(self.dirPath)
+                
+        self.fog = Fog('fog')
+        self.fog.setColor(.1,.1,.1)
+        self.fog.setExpDensity(.3)
+        self.fog.setLinearRange(50,150)
+        self.fog.setLinearFallback(45,160,320)
+        self.render.setFog(self.fog)
+        
+        
+        self.render.setShaderAuto()
+        self.render.setAntialias(AntialiasAttrib.MAuto)
+        
+        filters = CommonFilters(base.win, base.cam)
+        filters.setBloom(size='large')
+        
+        
+        self.onGame = False
+
+    def initUI(self):
+        self.font = loader.loadFont('./fonts/Magenta.ttf')
 
     def createStaticEnemy(self , original, px, py, pz):
         be = original.copyTo(self.scene)
