@@ -125,11 +125,30 @@ class Starfox(ShowBase):
         filters = CommonFilters(base.win, base.cam)
         filters.setBloom(size='large')
         
-        
+        self.initUI()
         self.onGame = False
 
     def initUI(self):
         self.font = loader.loadFont('./fonts/Magenta.ttf')
+        
+        self.dialogScreen = DirectDialog(
+            frameSize = (-0.7,0.7, -0.7, 0.7),
+            relief = DGG.FLAT
+        )
+        
+        self.titleUI = DirectLabel(
+        text = "Starlost Region 4",
+        parent = self.dialogScreen,
+        scale = 0.1,
+        pos = (0,0,.2),
+        text_font = self.font
+        )
+        
+        self.btn = DirectButton(text = "Start", command = self.startGame, pos =(0,0,0), parent = self.dialogScreen, scale=0.07 )
+
+    def startGame(self):
+        self.dialogScreen.hide()
+        self.onGame = True
 
     def createStaticEnemy(self , original, px, py, pz):
         be = original.copyTo(self.scene)
