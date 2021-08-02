@@ -43,7 +43,7 @@ class DynamicEnemy:
             if(self.activeTimer >= 5):
                 self.gameObject.removeNode()
     
-    def updateChaser(self, world, dt, player, bullet):
+    def updateChaser(self, world, dt, player, bullet, fireSound):
         diff = player.getPos(world) - self.gameObject.getPos(world)
         distance = diff.length()
         
@@ -75,7 +75,7 @@ class DynamicEnemy:
             
             if(self.bulletTimer >= 1.5):
                 self.bulletTimer = 0
-                
+                fireSound.play()
                 b = Bullet(bullet, 
                 world, 
                 self.gameObject.getPos(world) , 
@@ -86,14 +86,14 @@ class DynamicEnemy:
                 0x2
                 )
             
-    def update(self, world, dt , player, bullet):
+    def update(self, world, dt , player, bullet, fireSound):
         self.gameObject.lookAt(player)
         
         if( self.type == ENEMY_TYPE.KAMIKAZE):
             self.updateKamikaze(world,dt,player)
             
         if( self.type == ENEMY_TYPE.CHASER):
-            self.updateChaser(world,dt,player, bullet)
+            self.updateChaser(world,dt,player, bullet, fireSound)
     
     def crash(self, obj):
         if( type(obj) == Bullet ):

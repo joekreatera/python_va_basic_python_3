@@ -17,6 +17,8 @@ from panda3d.core import DirectionalLight, AmbientLight, Fog, PointLight
 from direct.filter.CommonFilters import CommonFilters
 from panda3d.core import AntialiasAttrib
 
+from direct.showbase import Audio3DManager
+
 from direct.gui.DirectGui import *
 from direct.gui.OnscreenText import OnscreenText
 from direct.gui.OnscreenImage import OnscreenImage
@@ -26,6 +28,8 @@ from panda3d.core import TextNode
 loadPrcFileData("","framebuffer-multisample 1")
 loadPrcFileData("","multisamples 2")
 
+loadPrcFileData("", "audio-library-name p3fmod_audio")
+loadPrcFileData("","fmod-use-surround-sound true")
 
 class Starfox(ShowBase):
     def __init__(self):
@@ -126,7 +130,23 @@ class Starfox(ShowBase):
         filters.setBloom(size='large')
         
         self.initUI()
+        self.initAudio()
         self.onGame = False
+
+
+    def initAudio(self):
+        self.audio3d = Audio3DManager.Audio3DManager(base.sfxManagerList[0] , self.camera)
+        
+        self.flyingSound = self.audio3d.loadSfx("./sounds/great fox flying.mp3")
+        self.flyingSound.setLoop(True)
+        
+        self.audio3d.attachSoundToObject(self.flyingSound, self.player)
+        self.audio3d.setSoundVelocityAuto(self.flyingSound)
+        self.audio3d.setListenerVelocityAuto()
+        self.audio3d.setDropOffFactor(0)
+        
+        self.fireSound = self.audio3d.loadSfx("./sounds/arwing double laser one shot.mp3")
+        self.crashSound = self.audio3d.loadSfx("./sounds/break.mp3")
 
     def initUI(self):
         self.font = loader.loadFont('./fonts/Magenta.ttf')
@@ -175,6 +195,7 @@ class Starfox(ShowBase):
     def startGame(self):
         self.dialogScreen.hide()
         self.onGame = True
+        self.flyingSound.play()
 
     def createStaticEnemy(self , original, px, py, pz):
         be = original.copyTo(self.scene)
@@ -182,6 +203,8 @@ class Starfox(ShowBase):
         base.cTrav.addCollider( be.find("**collision**") , self.CollisionHandlerEvent )
 
     def crash(self, evt):
+        
+        self.crashSound.play()
         objectInto = evt.getIntoNodePath().node().getParent(0).getPythonTag("ObjectController")
         objectFrom = evt.getFromNodePath().node().getParent(0).getPythonTag("ObjectController")
         
@@ -200,12 +223,12 @@ class Starfox(ShowBase):
             #self.camera.lookAt(self.player)
             self.camera.setHpr( Path.getHeading(new_y) ,0 ,0 )
             
-            relX, relZ = self.player.getPythonTag("ObjectController").update(self.rails, globalClock.getDt() , self.scene,  self.bullet )
+            relX, relZ = self.player.getPythonTag("ObjectController").update(self.rails, globalClock.getDt() , self.scene,  self.bullet , self.fireSound)
             self.camera.setPos(self.rails, relX,-30,relZ)
             
             enemies = self.scene.findAllMatches(DynamicEnemy.dynamic_enemy_name)
             for e in enemies:
-                e.getPythonTag("ObjectController").update(self.scene, globalClock.getDt() , self.player, self.bullet)
+                e.getPythonTag("ObjectController").update(self.scene, globalClock.getDt() , self.player, self.bullet, self.fireSound)
                 
                 
             bullets = self.scene.findAllMatches(Bullet.bullet_name)

@@ -11,7 +11,7 @@ class Player:
         self.shouldShoot = True
         self.lifes = 2
         
-    def update(self, world , dt , globalWorld,  bullet):
+    def update(self, world , dt , globalWorld,  bullet , fireSound):
         up = InputManager.getInput(InputManager.arrowUp)
         down = InputManager.getInput(InputManager.arrowDown)
         left = InputManager.getInput(InputManager.arrowLeft)
@@ -53,6 +53,7 @@ class Player:
             80,
             0x4
             )
+            fireSound.play()
         
         if( not shoot and not self.shouldShoot ):
             self.shouldShoot = True
